@@ -1,0 +1,12 @@
+{
+	"compilerOptions": {
+		"target": "ES6",
+		"module": "commonjs"
+	},
+	"include": [
+		"./src/**/*"
+	],
+	"typingOptions": {
+    "enableAutoDiscovery": true
+  }
+}
