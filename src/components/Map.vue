@@ -1,6 +1,6 @@
 <template>
 	<div class="vue-google-map" v-observe-visibility="visibilityChanged">
-		<div ref="map" class="target"></div>
+		<div ref="map" class="map-view"></div>
 		<div class="hidden-content">
 			<slot></slot>
 		</div>
@@ -10,8 +10,8 @@
 </template>
 
 <script>
-import { ResizeObserver } from 'vue-resize/dist/vue-resize'
-// import { ObserveVisibility } from 'vue-observe-visibility'
+import { ResizeObserver } from 'vue-resize'
+import { ObserveVisibility } from 'vue-observe-visibility'
 import Ready from '../mixins/Ready'
 import BoundProps from '../mixins/BoundProps'
 import Events from '../mixins/Events'
@@ -25,9 +25,15 @@ const boundProps = [
 			lat: autoCall(value.lat),
 			lng: autoCall(value.lng),
 		}),
-		applier: (value, oldValue, set) => {
-			if (value.lat !== oldValue.lat || value.lng !== oldValue.lng) {
-				set(value)
+		identity: (a, b) => {
+			if (a && b) {
+				if (typeof a.equals !== 'function') {
+					a = new window.google.maps.LatLng(a)
+				}
+				if (typeof b.equals !== 'function') {
+					b = new window.google.maps.LatLng(b)
+				}
+				return a.equals(b)
 			}
 		},
 		retriever: (value) => ({
@@ -77,13 +83,10 @@ export default {
 	},
 
 	directives: {
-		// ObserveVisibility,
+		ObserveVisibility,
 	},
 
 	props: {
-		bounds: {
-			type: Object,
-		},
 		center: {
 			required: true,
 			type: Object,
@@ -115,29 +118,6 @@ export default {
 			names: redirectedMethods,
 		}),
 
-		ready () {
-			const element = this.$refs.map
-
-			const options = {
-				center: this.center,
-				heading: this.heading,
-				mapTypeId: this.mapTypeId,
-				tilt: this.tilt,
-				zoom: this.zoom,
-				...this.options,
-			}
-
-			this.$map = new window.google.maps.Map(element, options)
-
-			this.bindProps(this.$map, boundProps)
-
-			this.listen(this.$map, 'bounds_changed', () => {
-				this.$emit('update:bounds', this.$map.getBounds())
-			})
-
-			this.redirectEvents(this.$map, redirectedEvents)
-		},
-
 		resize (preserveCenter = true) {
 			if (this.$map) {
 				let center
@@ -153,6 +133,29 @@ export default {
 			}
 		},
 	},
+
+	googleMapsReady () {
+		const element = this.$refs.map
+
+		const options = {
+			center: this.center,
+			heading: this.heading,
+			mapTypeId: this.mapTypeId,
+			tilt: this.tilt,
+			zoom: this.zoom,
+			...this.options,
+		}
+
+		this.$map = new window.google.maps.Map(element, options)
+
+		this.bindProps(this.$map, boundProps)
+
+		this.listen(this.$map, 'bounds_changed', () => {
+			this.$emit('update:bounds', this.$map.getBounds())
+		})
+
+		this.redirectEvents(this.$map, redirectedEvents)
+	},
 }
 </script>
 
@@ -161,7 +164,7 @@ export default {
 	position: relative;
 }
 
-.target {
+.map-view {
 	left: 0;
 	right: 0;
 	top: 0;

@@ -3,6 +3,7 @@ import resolve from 'rollup-plugin-node-resolve'
 import vue from 'rollup-plugin-vue'
 import css from 'rollup-plugin-css-porter'
 import stylus from 'rollup-plugin-stylus-css-modules'
+import cjs from 'rollup-plugin-commonjs'
 
 export default {
 	input: 'src/index.js',
@@ -14,6 +15,7 @@ export default {
 			main: true,
 			browser: true,
 		}),
+		cjs(),
 		vue({
 			// css: false,
 			autoStyles: false,
@@ -28,6 +30,9 @@ export default {
 		}),
 		babel({
 			exclude: 'node_modules/**',
+			'plugins': [
+				'external-helpers',
+			],
 		}),
 	],
 	watch: {

@@ -1,6 +1,6 @@
-export default class Loader {
-	loaded = false
-	readyPromises = []
+const loader = {
+	loaded: false,
+	readyPromises: [],
 
 	/**
 	 * @param apiKey    API Key, or object with the URL parameters. For example
@@ -68,31 +68,30 @@ export default class Loader {
 			document.body.appendChild(googleMapScript)
 
 			window.VueGoogleMapsLoaded = this._setLoaded.bind(this)
-			console.log('script added')
 		} else {
 			console.warn('The Google Maps library is already loaded')
 			this._setLoaded()
 		}
-	}
+	},
 
 	ensureReady () {
 		if (this.loaded) {
 			return Promise.resolve()
 		} else {
-			const promise = new Promise()
-			this.readyPromises.push(promise)
+			const promise = new Promise((resolve) => {
+				this.readyPromises.push(resolve)
+			})
 			return promise
 		}
-	}
+	},
 
 	_setLoaded () {
-		console.log('google maps loaded')
 		this.loaded = true
-		for (const p of this.readyPromises) {
-			p.resolve()
+		for (const resolve of this.readyPromises) {
+			resolve()
 		}
 		this.readyPromises = []
-	}
+	},
 }
 
-export const loader = new Loader()
+export default loader

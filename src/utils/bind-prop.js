@@ -6,25 +6,37 @@ export function bindProp ({
 	targetPropName,
 	target,
 	watcher,
+	identity,
 	applier,
 	retriever,
 	readOnly,
 	event,
+	changeEvent,
 }) {
-	const capitalizedName = capitalize(name)
-	const getter = () => target && target[`get${capitalizedName}`]()
-	const setter = value => target && target[`set${capitalizedName}`](value)
-	const changeEvent = `${name}_changed`
-
 	if (!targetPropName) {
 		targetPropName = name
 	}
+	if (!changeEvent) {
+		changeEvent = `${targetPropName.toLowerCase()}_changed`
+	}
+
+	let setValue
+	const capitalizedName = capitalize(name)
+	const getter = () => target && target[`get${capitalizedName}`]()
+	const setter = value => {
+		setValue = value
+		target && target[`set${capitalizedName}`](value)
+	}
+
 	if (!watcher) {
 		watcher = value => value
 	}
+	if (!identity) {
+		identity = (a, b) => a === b
+	}
 	if (!applier) {
 		applier = (value, oldValue, set) => {
-			if (value !== oldValue) {
+			if (!identity(value, oldValue)) {
 				set(value)
 			}
 		}
@@ -41,13 +53,15 @@ export function bindProp ({
 		(value, oldValue) => applier(value, oldValue, setter)
 	)
 
-	function handleChanged () {
-		vm.$emit(event, retriever(getter()))
-	}
-
-	target.addEventListener(changeEvent, handleChanged)
+	const listener = target.addListener(changeEvent, () => {
+		const value = retriever(getter())
+		if (!identity(value, setValue)) {
+			vm.$emit(event, value)
+			setValue = value
+		}
+	})
 
 	return () => {
-		target.removeEventListener(changeEvent, handleChanged)
+		listener.remove()
 	}
 }

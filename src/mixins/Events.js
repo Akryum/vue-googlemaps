@@ -1,12 +1,7 @@
 export default {
 	methods: {
 		listen (target, event, handler) {
-			this._thirdPartyEvents.push({
-				target,
-				event,
-				handler,
-			})
-			target.addEventListener(event, handler)
+			this._googleListeners.push(target.addListener(event, handler))
 		},
 
 		redirectEvents (target, events) {
@@ -19,12 +14,12 @@ export default {
 	},
 
 	beforeCreate () {
-		this._thirdPartyEvents = []
+		this._googleListeners = []
 	},
 
 	beforeDestroy () {
-		for (const e of this._thirdPartyEvents) {
-			e.target.removeEventListener(e.event, e.handler)
+		for (const listener of this._googleListeners) {
+			listener.remove()
 		}
 	},
 }
