@@ -6,6 +6,10 @@ export default {
 	],
 
 	props: {
+		filter: {
+			type: Function,
+			default: null,
+		},
 		request: {
 			type: Object,
 			required: true,
@@ -24,6 +28,21 @@ export default {
 		}
 	},
 
+	computed: {
+		filteredResults () {
+			if (this.results && this.filter) {
+				return this.results.filter(this.filter)
+			} else {
+				return this.results
+			}
+		},
+
+		finalResults () {
+			const results = this.filteredResults
+			return results && (!Array.isArray(results) || results.length) ? results : null
+		},
+	},
+
 	watch: {
 		request: {
 			handler: 'update',
@@ -40,9 +59,14 @@ export default {
 			// Override this in components
 			return {
 				loading: this.loading,
-				results: this.results,
+				results: this.finalResults,
 				staus: this.staus,
 			}
+		},
+
+		setResults (results, status) {
+			this.results = results
+			this.status = status
 		},
 
 		update () {

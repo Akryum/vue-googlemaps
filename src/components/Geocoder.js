@@ -22,7 +22,7 @@ export default {
 
 		getPlaceDetails (result) {
 			if (result.place_id) {
-				result.placeDetails = null
+				result.placeDetails = { loading: true }
 				this.$placeService.getDetails({
 					placeId: result.place_id,
 				}, (details, status) => {
@@ -38,8 +38,7 @@ export default {
 					if (results) {
 						!this.disablePlaceDetails && results.forEach(this.getPlaceDetails)
 					}
-					this.results = results && results.length ? results : null
-					this.status = status
+					this.setResults(results, status)
 					this.loading = false
 				})
 			}

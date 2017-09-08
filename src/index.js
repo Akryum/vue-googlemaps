@@ -9,6 +9,7 @@ import Geocoder from './components/Geocoder'
 import Map from './components/Map.vue'
 import Marker from './components/Marker'
 import NearbyPlaces from './components/NearbyPlaces'
+import PlaceDetails from './components/PlaceDetails'
 import UserPosition from './components/UserPosition'
 
 export {
@@ -21,6 +22,7 @@ function registerComponents (Vue, prefix) {
 	Vue.component(`${prefix}map`, Map)
 	Vue.component(`${prefix}marker`, Marker)
 	Vue.component(`${prefix}nearby-places`, NearbyPlaces)
+	Vue.component(`${prefix}nearby-places`, PlaceDetails)
 	Vue.component(`${prefix}user-position`, UserPosition)
 }
 

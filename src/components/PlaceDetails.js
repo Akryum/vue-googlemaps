@@ -1,7 +1,7 @@
 import Service from '../mixins/Service'
 
 export default {
-	name: 'GoogleMapsNearbyPlaces',
+	name: 'GoogleMapsPlaceDetails',
 
 	mixins: [
 		Service,
@@ -14,7 +14,7 @@ export default {
 
 		update () {
 			this.loading = true
-			this.$placeService.nearbySearch(this.request, (results, status) => {
+			this.$placeService.getDetails(this.request, (results, status) => {
 				this.setResults(results, status)
 				this.loading = false
 			})
