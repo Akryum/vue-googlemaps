@@ -60,7 +60,6 @@ const redirectedEvents = [
 	'drag',
 	'dragend',
 	'dragstart',
-	'idle',
 	'mousemove',
 	'mouseout',
 	'mouseover',
@@ -120,10 +119,10 @@ export default {
 
 		resize (preserveCenter = true) {
 			if (this.$map) {
-				let center
-				preserveCenter && (center = this.$map.getCenter())
+				// let center
+				// preserveCenter && (center = this.$map.getCenter())
 				window.google.maps.event.trigger(this.$map, 'resize')
-				preserveCenter && this.$map.setCenter(center)
+				preserveCenter && this.$map.setCenter(this.lastCenter)
 			}
 		},
 
@@ -153,6 +152,13 @@ export default {
 		this.listen(this.$map, 'bounds_changed', () => {
 			this.$emit('update:bounds', this.$map.getBounds())
 		})
+
+		this.listen(this.$map, 'idle', () => {
+			this.$emit('idle')
+			this.lastCenter = this.$map.getCenter()
+		})
+
+		this.lastCenter = this.$map.getCenter()
 
 		this.redirectEvents(this.$map, redirectedEvents)
 	},

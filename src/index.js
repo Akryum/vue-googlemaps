@@ -4,23 +4,31 @@ import loader from './lib-loader'
 import { optionMergeStrategies } from './options'
 import { initErrorHandling } from './utils/error'
 
+import Circle from './components/Circle'
+import Geocoder from './components/Geocoder'
 import Map from './components/Map.vue'
 import Marker from './components/Marker'
+import NearbyPlaces from './components/NearbyPlaces'
+import UserPosition from './components/UserPosition'
 
 export {
 	Map,
 }
 
 function registerComponents (Vue, prefix) {
+	Vue.component(`${prefix}circle`, Circle)
+	Vue.component(`${prefix}geocoder`, Geocoder)
 	Vue.component(`${prefix}map`, Map)
 	Vue.component(`${prefix}marker`, Marker)
+	Vue.component(`${prefix}nearby-places`, NearbyPlaces)
+	Vue.component(`${prefix}user-position`, UserPosition)
 }
 
 const plugin = {
 	install (Vue, options) {
 		const finalOptions = Object.assign({}, {
 			installComponents: true,
-			componentsPrefix: 'google-',
+			componentsPrefix: 'googlemaps-',
 		}, options)
 
 		optionMergeStrategies(Vue)
