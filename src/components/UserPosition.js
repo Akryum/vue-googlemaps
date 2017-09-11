@@ -20,7 +20,7 @@ export default {
 
 	props: {
 		accuracy: {
-			default: 1,
+			default: 0,
 		},
 		accuracyStyle: {
 			type: Object,
@@ -35,7 +35,7 @@ export default {
 			default: false,
 		},
 		minimumAccuracy: {
-			default: null,
+			default: 1000,
 		},
 		position: {
 			type: Object,
@@ -133,7 +133,6 @@ export default {
 				h(Marker, {
 					props: {
 						clickable: false,
-						flat: true,
 						icon: this.positionStyle || defaultPositionStyle,
 						optimized: false,
 						position: this.currentPosition,

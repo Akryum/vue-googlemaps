@@ -21,8 +21,9 @@ export default {
 		},
 
 		getPlaceDetails (result) {
+			result.placeDetails = {}
 			if (result.place_id) {
-				result.placeDetails = { loading: true }
+				result.placeDetails.loading = true
 				this.$placeService.getDetails({
 					placeId: result.place_id,
 				}, (details, status) => {

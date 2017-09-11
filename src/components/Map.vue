@@ -52,6 +52,7 @@ const redirectedMethods = [
 	'panTo',
 	'panToBounds',
 	'fitBounds',
+	'getBounds',
 ]
 
 const redirectedEvents = [

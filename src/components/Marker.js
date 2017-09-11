@@ -2,7 +2,6 @@ import MapElement from '../mixins/MapElement'
 
 const boundProps = [
 	'animation',
-	'attribution',
 	'clickable',
 	'cursor',
 	'draggable',
@@ -40,9 +39,6 @@ export default {
 	props: {
 		animation: {
 			type: Number,
-		},
-		attribution: {
-			type: Object,
 		},
 		clickable: {
 			type: Boolean,

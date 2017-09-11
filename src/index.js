@@ -22,7 +22,7 @@ function registerComponents (Vue, prefix) {
 	Vue.component(`${prefix}map`, Map)
 	Vue.component(`${prefix}marker`, Marker)
 	Vue.component(`${prefix}nearby-places`, NearbyPlaces)
-	Vue.component(`${prefix}nearby-places`, PlaceDetails)
+	Vue.component(`${prefix}place-details`, PlaceDetails)
 	Vue.component(`${prefix}user-position`, UserPosition)
 }
 
