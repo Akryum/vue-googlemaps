@@ -17,7 +17,7 @@ export default {
 	methods: {
 		createServices () {
 			this.$geocoder = new window.google.maps.Geocoder()
-			this.$placeService = new window.google.maps.places.PlacesService(this.$refs.attributions)		
+			this.$placeService = new window.google.maps.places.PlacesService(this.$refs.attributions)
 		},
 
 		getPlaceDetails (result) {
