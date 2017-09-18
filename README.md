@@ -5,8 +5,8 @@
 
 Integrate Google Maps in your Vue application
 
-> This library is Work In Progress
-> More components will be available in the 1.0 release
+> This library is Work In Progress.
+> More components will be available in the 1.0 release.
 
 ## Installation
 
