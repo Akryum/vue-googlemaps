@@ -2,7 +2,7 @@ import babel from 'rollup-plugin-babel'
 import resolve from 'rollup-plugin-node-resolve'
 import vue from 'rollup-plugin-vue'
 import css from 'rollup-plugin-css-porter'
-import stylus from 'rollup-plugin-stylus-css-modules'
+// import stylus from 'rollup-plugin-stylus-css-modules'
 import cjs from 'rollup-plugin-commonjs'
 import replace from 'rollup-plugin-replace'
 
@@ -22,11 +22,15 @@ export default {
 			autoStyles: false,
 			styleToImports: true,
 		}),
-		stylus({
-			sourceMap: false,
-		}),
+		// stylus({
+		// 	sourceMap: false,
+		// 	// output (css) {
+		// 	// 	console.log(css)
+		// 	// },
+		// }),
 		css({
-			output: 'dist/vue-googlemaps.css',
+			minified: 'dist/vue-googlemaps.css',
+			raw: false,
 		}),
 		babel({
 			exclude: 'node_modules/**',
