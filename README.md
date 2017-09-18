@@ -38,11 +38,9 @@ Vue.use(VueGoogleMaps, {
 
 ```html
 <googlemaps-map
-  :center="center"
-  :zoom="zoom"
+  :center.sync="center"
+  :zoom.sync="zoom"
   :options="mapOptions"
-  @update:center="setCenter"
-  @update:zoom="setZoom"
   @idle="onIdle"
   @click="onMapClick">
 
