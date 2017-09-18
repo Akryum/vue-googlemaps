@@ -22,7 +22,7 @@ yarn add vue-googlemaps
 
 ```js
 import 'vue-googlemaps/dist/vue-googlemaps.css'
-import VueGoogleMaps, * as GMap from 'vue-googlemaps'
+import VueGoogleMaps from 'vue-googlemaps'
 
 Vue.use(VueGoogleMaps, {
   load: {
