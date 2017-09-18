@@ -26,7 +26,7 @@ export default {
 			sourceMap: false,
 		}),
 		css({
-			output: 'dist/vue-googlemaps.css',
+			dest: 'dist/vue-googlemaps.css',
 		}),
 		babel({
 			exclude: 'node_modules/**',
