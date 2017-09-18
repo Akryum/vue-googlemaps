@@ -4,10 +4,12 @@ import vue from 'rollup-plugin-vue'
 import css from 'rollup-plugin-css-porter'
 import stylus from 'rollup-plugin-stylus-css-modules'
 import cjs from 'rollup-plugin-commonjs'
+import replace from 'rollup-plugin-replace'
+
+const config = require('../package.json')
 
 export default {
 	input: 'src/index.js',
-	exports: 'named',
 	name: 'vue-googlemaps',
 	plugins: [
 		resolve({
@@ -17,12 +19,10 @@ export default {
 		}),
 		cjs(),
 		vue({
-			// css: false,
 			autoStyles: false,
 			styleToImports: true,
 		}),
 		stylus({
-			// output: 'dist/vue-googlemaps2.css',
 			sourceMap: false,
 		}),
 		css({
@@ -33,6 +33,9 @@ export default {
 			'plugins': [
 				'external-helpers',
 			],
+		}),
+		replace({
+			VERSION: JSON.stringify(config.version),
 		}),
 	],
 	watch: {

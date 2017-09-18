@@ -1,9 +1,3 @@
-(function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
-	typeof define === 'function' && define.amd ? define(['exports'], factory) :
-	(factory((global['vue-googlemaps'] = {})));
-}(this, (function (exports) { 'use strict';
-
 function createCommonjsModule(fn, module) {
 	return module = { exports: {} }, fn(module, module.exports), module.exports;
 }
@@ -2197,15 +2191,5 @@ if (GlobalVue) {
 	GlobalVue.use(plugin);
 }
 
-exports.Circle = Circle;
-exports.Geocoder = Geocoder;
-exports.Map = Map;
-exports.Marker = Marker;
-exports.NearbyPlaces = NearbyPlaces;
-exports.PlaceDetails = PlaceDetails;
-exports.UserPosition = UserPosition;
-exports['default'] = plugin;
-
-Object.defineProperty(exports, '__esModule', { value: true });
-
-})));
+export { Circle, Geocoder, Map, Marker, NearbyPlaces, PlaceDetails, UserPosition };
+export default plugin;

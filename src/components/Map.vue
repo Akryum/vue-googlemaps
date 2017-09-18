@@ -105,7 +105,6 @@ export default {
 			type: Number,
 		},
 		zoom: {
-			required: false,
 			type: Number,
 		},
 	},

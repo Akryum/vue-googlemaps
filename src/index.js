@@ -1,4 +1,5 @@
 import 'vue-resize/dist/vue-resize.css'
+
 import 'regenerator-runtime/runtime'
 import loader from './lib-loader'
 import { optionMergeStrategies } from './options'
@@ -13,7 +14,13 @@ import PlaceDetails from './components/PlaceDetails'
 import UserPosition from './components/UserPosition'
 
 export {
+	Circle,
+	Geocoder,
 	Map,
+	Marker,
+	NearbyPlaces,
+	PlaceDetails,
+	UserPosition,
 }
 
 function registerComponents (Vue, prefix) {
@@ -27,6 +34,8 @@ function registerComponents (Vue, prefix) {
 }
 
 const plugin = {
+	// eslint-disable-next-line no-undef
+	version: VERSION,
 	install (Vue, options) {
 		const finalOptions = Object.assign({}, {
 			installComponents: true,
