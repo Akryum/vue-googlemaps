@@ -165,12 +165,12 @@ export default {
 }
 </script>
 
-<style lang="stylus" scoped>
+<style scoped>
 .vue-google-map {
 	position: relative;
 }
 
-.map-view {
+.vue-google-map .map-view {
 	left: 0;
 	right: 0;
 	top: 0;
@@ -178,7 +178,7 @@ export default {
 	position: absolute;
 }
 
-.hidden-content {
+.vue-google-map .hidden-content {
 	display: none;
 }
 </style>
