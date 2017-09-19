@@ -1,10 +1,10 @@
 import babel from 'rollup-plugin-babel'
 import resolve from 'rollup-plugin-node-resolve'
 import vue from 'rollup-plugin-vue'
-import css from 'rollup-plugin-css-porter'
-// import stylus from 'rollup-plugin-stylus-css-modules'
 import cjs from 'rollup-plugin-commonjs'
 import replace from 'rollup-plugin-replace'
+import fs from 'fs'
+import CleanCSS from 'clean-css'
 
 const config = require('../package.json')
 
@@ -19,18 +19,9 @@ export default {
 		}),
 		cjs(),
 		vue({
-			autoStyles: false,
-			styleToImports: true,
-		}),
-		// stylus({
-		// 	sourceMap: false,
-		// 	// output (css) {
-		// 	// 	console.log(css)
-		// 	// },
-		// }),
-		css({
-			minified: 'dist/vue-googlemaps.css',
-			raw: false,
+			css (style) {
+				fs.writeFileSync('dist/vue-googlemaps.css', new CleanCSS().minify(style).styles)
+			},
 		}),
 		babel({
 			exclude: 'node_modules/**',

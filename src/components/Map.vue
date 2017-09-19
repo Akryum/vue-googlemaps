@@ -165,20 +165,24 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="stylus">
+@import '../../node_modules/vue-resize/dist/vue-resize.css';
+</style>
+
+<style lang="stylus" scoped>
 .vue-google-map {
 	position: relative;
-}
 
-.vue-google-map .map-view {
-	left: 0;
-	right: 0;
-	top: 0;
-	bottom: 0;
-	position: absolute;
-}
+	.map-view {
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		position: absolute;
+	}
 
-.vue-google-map .hidden-content {
-	display: none;
+	.hidden-content {
+		display: none;
+	}
 }
 </style>
