@@ -2018,10 +2018,6 @@ var Marker = {
 		var options = Object.assign({}, this.$props);
 		options.map = this.$_map;
 
-		if (options.position && typeof options.position.equals !== 'function') {
-			options.position = new window.google.maps.LatLng(options.position);
-		}
-
 		this.$_marker = new window.google.maps.Marker(options);
 		this.bindProps(this.$_marker, boundProps$2);
 		this.redirectEvents(this.$_marker, redirectedEvents$2);
@@ -2244,7 +2240,7 @@ function registerComponents(Vue, prefix) {
 
 var plugin = {
 	// eslint-disable-next-line no-undef
-	version: "0.0.3",
+	version: "0.0.4",
 	install: function install(Vue, options) {
 		var finalOptions = Object.assign({}, {
 			installComponents: true,
