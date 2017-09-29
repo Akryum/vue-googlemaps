@@ -88,8 +88,8 @@ Vue.use(VueGoogleMaps, {
     location: latLng,
   }">
   <template scope="props">
-    <div class="name">{{ props.results.name }}</div>
-    <div class="address">{{ props.results.formatted_address }}</div>
+    <div class="name">{{ props.results[1].name }}</div>
+    <div class="address">{{ props.results[0].formatted_address }}</div>
   </template>
 </googlemaps-geocoder>
 ```
