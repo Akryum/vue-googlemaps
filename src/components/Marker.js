@@ -94,16 +94,21 @@ export default {
 	},
 
 	googleMapsReady () {
-		const options = this.$props
-		options.map = this.$map
-		this.$marker = new window.google.maps.Marker(options)
-		this.bindProps(this.$marker, boundProps)
-		this.redirectEvents(this.$marker, redirectedEvents)
+		const options = Object.assign({}, this.$props)
+		options.map = this.$_map
+
+		if (options.position && typeof options.position.equals !== 'function') {
+			options.position = new window.google.maps.LatLng(options.position)
+		}
+
+		this.$_marker = new window.google.maps.Marker(options)
+		this.bindProps(this.$_marker, boundProps)
+		this.redirectEvents(this.$_marker, redirectedEvents)
 	},
 
 	beforeDestroy () {
-		if (this.$marker) {
-			this.$marker.setMap(null)
+		if (this.$_marker) {
+			this.$_marker.setMap(null)
 		}
 	},
 }

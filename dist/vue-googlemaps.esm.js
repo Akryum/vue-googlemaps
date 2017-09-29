@@ -1040,6 +1040,7 @@ function optionMergeStrategies(Vue) {
 	var strats = Vue.config.optionMergeStrategies;
 
 	strats.googleMapsReady = strats.created;
+	strats.googleMapsPrepare = strats.created;
 }
 
 var config = void 0;
@@ -1144,10 +1145,15 @@ function bindProp(_ref) {
 }
 
 var BoundProps = {
+	beforeDestroy: function beforeDestroy() {
+		this.unbindProps();
+	},
+
+
 	methods: {
 		bindProps: function bindProps(target, props) {
 			this.unbindProps();
-			this._boundsProps = [];
+			this.$_boundsProps = [];
 			var _iteratorNormalCompletion = true;
 			var _didIteratorError = false;
 			var _iteratorError = undefined;
@@ -1165,7 +1171,7 @@ var BoundProps = {
 					} else {
 						Object.assign(options, prop);
 					}
-					this._boundsProps.push(bindProp(options));
+					this.$_boundsProps.push(bindProp(options));
 				}
 			} catch (err) {
 				_didIteratorError = true;
@@ -1183,22 +1189,50 @@ var BoundProps = {
 			}
 		},
 		unbindProps: function unbindProps() {
-			if (this._boundsProps) {
-				this._boundsProps.forEach(function (unbind) {
+			if (this.$_boundsProps) {
+				this.$_boundsProps.forEach(function (unbind) {
 					return unbind();
 				});
 			}
 		}
-	},
-	beforeDestroy: function beforeDestroy() {
-		this.unbindProps();
 	}
 };
 
 var Events = {
+	beforeCreate: function beforeCreate() {
+		this.$_googleListeners = [];
+	},
+	beforeDestroy: function beforeDestroy() {
+		var _iteratorNormalCompletion = true;
+		var _didIteratorError = false;
+		var _iteratorError = undefined;
+
+		try {
+			for (var _iterator = this.$_googleListeners[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+				var listener = _step.value;
+
+				listener.remove();
+			}
+		} catch (err) {
+			_didIteratorError = true;
+			_iteratorError = err;
+		} finally {
+			try {
+				if (!_iteratorNormalCompletion && _iterator.return) {
+					_iterator.return();
+				}
+			} finally {
+				if (_didIteratorError) {
+					throw _iteratorError;
+				}
+			}
+		}
+	},
+
+
 	methods: {
 		listen: function listen(target, event, handler) {
-			this._googleListeners.push(target.addListener(event, handler));
+			this.$_googleListeners.push(target.addListener(event, handler));
 		},
 		redirectEvents: function redirectEvents(target, events) {
 			var _this = this;
@@ -1213,58 +1247,28 @@ var Events = {
 				});
 			};
 
-			var _iteratorNormalCompletion = true;
-			var _didIteratorError = false;
-			var _iteratorError = undefined;
+			var _iteratorNormalCompletion2 = true;
+			var _didIteratorError2 = false;
+			var _iteratorError2 = undefined;
 
 			try {
-				for (var _iterator = events[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-					var e = _step.value;
+				for (var _iterator2 = events[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+					var e = _step2.value;
 
 					_loop(e);
 				}
 			} catch (err) {
-				_didIteratorError = true;
-				_iteratorError = err;
+				_didIteratorError2 = true;
+				_iteratorError2 = err;
 			} finally {
 				try {
-					if (!_iteratorNormalCompletion && _iterator.return) {
-						_iterator.return();
+					if (!_iteratorNormalCompletion2 && _iterator2.return) {
+						_iterator2.return();
 					}
 				} finally {
-					if (_didIteratorError) {
-						throw _iteratorError;
+					if (_didIteratorError2) {
+						throw _iteratorError2;
 					}
-				}
-			}
-		}
-	},
-
-	beforeCreate: function beforeCreate() {
-		this._googleListeners = [];
-	},
-	beforeDestroy: function beforeDestroy() {
-		var _iteratorNormalCompletion2 = true;
-		var _didIteratorError2 = false;
-		var _iteratorError2 = undefined;
-
-		try {
-			for (var _iterator2 = this._googleListeners[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-				var listener = _step2.value;
-
-				listener.remove();
-			}
-		} catch (err) {
-			_didIteratorError2 = true;
-			_iteratorError2 = err;
-		} finally {
-			try {
-				if (!_iteratorNormalCompletion2 && _iterator2.return) {
-					_iterator2.return();
-				}
-			} finally {
-				if (_didIteratorError2) {
-					throw _iteratorError2;
 				}
 			}
 		}
@@ -1281,7 +1285,8 @@ var Ready = {
 		var _this = this;
 
 		return asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-			var handlers, i;
+			var handlers, promises, i, result, _handlers, _i;
+
 			return regeneratorRuntime.wrap(function _callee$(_context) {
 				while (1) {
 					switch (_context.prev = _context.next) {
@@ -1290,21 +1295,48 @@ var Ready = {
 							return loader.ensureReady();
 
 						case 2:
-							_this.googleMapsReady = true;
-							handlers = _this.$options.googleMapsReady;
+							handlers = _this.$options.googleMapsPrepare;
 
-							if (handlers) {
-								for (i = 0; i < handlers.length; i++) {
+							if (!handlers) {
+								_context.next = 8;
+								break;
+							}
+
+							promises = [];
+
+							for (i = 0; i < handlers.length; i++) {
+								try {
+									result = handlers[i].call(_this);
+
+									if (typeof result.then === 'function') {
+										promises.push(result);
+									}
+								} catch (e) {
+									handleError(e, _this, 'googleMapsPrepare hook');
+								}
+							}
+							_context.next = 8;
+							return Promise.all(promises);
+
+						case 8:
+
+							// Ready
+							_this.googleMapsReady = true;
+							_handlers = _this.$options.googleMapsReady;
+
+							if (_handlers) {
+								for (_i = 0; _i < _handlers.length; _i++) {
 									try {
-										handlers[i].call(_this);
+										_handlers[_i].call(_this);
 									} catch (e) {
 										handleError(e, _this, 'googleMapsReady hook');
 									}
 								}
 							}
+
 							_this.$emit('ready');
 
-						case 6:
+						case 12:
 						case 'end':
 							return _context.stop();
 					}
@@ -1316,7 +1348,7 @@ var Ready = {
 
 var FindAncestor = {
 	methods: {
-		$findAncestor: function $findAncestor(condition) {
+		$_findAncestor: function $_findAncestor(condition) {
 			var search = this.$parent;
 
 			while (search) {
@@ -1335,7 +1367,7 @@ var MapElement = {
 	mixins: [BoundProps, Events, FindAncestor, Ready],
 
 	created: function created() {
-		var mapAncestor = this.$findAncestor(function (a) {
+		var mapAncestor = this.$_findAncestor(function (a) {
 			return a.$options.name === 'GoogleMapsMap';
 		});
 
@@ -1343,10 +1375,31 @@ var MapElement = {
 			throw new Error(this.constructor.name + ' component must be used within a <google-map> component.');
 		}
 
-		this.$mapAncestor = mapAncestor;
+		this.$_mapAncestor = mapAncestor;
 	},
-	googleMapsReady: function googleMapsReady() {
-		this.$map = this.$mapAncestor.$map;
+	googleMapsPrepare: function googleMapsPrepare() {
+		var _this = this;
+
+		return asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+			var mapComp;
+			return regeneratorRuntime.wrap(function _callee$(_context) {
+				while (1) {
+					switch (_context.prev = _context.next) {
+						case 0:
+							mapComp = _this.$_mapAncestor;
+							_context.next = 3;
+							return mapComp.$_getMap();
+
+						case 3:
+							_this.$_map = _context.sent;
+
+						case 4:
+						case 'end':
+							return _context.stop();
+					}
+				}
+			}, _callee, _this);
+		}))();
 	}
 };
 
@@ -1401,7 +1454,7 @@ var Circle = {
 
 	methods: {
 		updateOptions: function updateOptions(options) {
-			this.$circle && this.$circle.setOptions(options || this.$props);
+			this.$_circle && this.$_circle.setOptions(options || this.$props);
 		}
 	},
 
@@ -1411,13 +1464,13 @@ var Circle = {
 	googleMapsReady: function googleMapsReady() {
 		var options = this.$props;
 		options.map = this.$map;
-		this.$circle = new window.google.maps.Circle(options);
-		this.bindProps(this.$circle, boundProps);
-		this.redirectEvents(this.$circle, redirectedEvents);
+		this.$_circle = new window.google.maps.Circle(options);
+		this.bindProps(this.$_circle, boundProps);
+		this.redirectEvents(this.$_circle, redirectedEvents);
 	},
 	beforeDestroy: function beforeDestroy() {
-		if (this.$circle) {
-			this.$circle.setMap(null);
+		if (this.$_circle) {
+			this.$_circle.setMap(null);
 		}
 	}
 };
@@ -1516,14 +1569,14 @@ var Geocoder = {
 
 	methods: {
 		createServices: function createServices() {
-			this.$geocoder = new window.google.maps.Geocoder();
-			this.$placeService = new window.google.maps.places.PlacesService(this.$refs.attributions);
+			this.$_geocoder = new window.google.maps.Geocoder();
+			this.$_placeService = new window.google.maps.places.PlacesService(this.$refs.attributions);
 		},
 		getPlaceDetails: function getPlaceDetails(result) {
 			result.placeDetails = {};
 			if (result.place_id) {
 				result.placeDetails.loading = true;
-				this.$placeService.getDetails({
+				this.$_placeService.getDetails({
 					placeId: result.place_id
 				}, function (details, status) {
 					result.placeDetails = details;
@@ -1535,7 +1588,7 @@ var Geocoder = {
 
 			if (this.googleMapsReady) {
 				this.loading = true;
-				this.$geocoder.geocode(this.request, function (results, status) {
+				this.$_geocoder.geocode(this.request, function (results, status) {
 					if (results) {
 						!_this.disablePlaceDetails && results.forEach(_this.getPlaceDetails);
 					}
@@ -1548,95 +1601,95 @@ var Geocoder = {
 };
 
 function getInternetExplorerVersion() {
-  var ua = window.navigator.userAgent;
+	var ua = window.navigator.userAgent;
 
-  var msie = ua.indexOf('MSIE ');
-  if (msie > 0) {
-    // IE 10 or older => return version number
-    return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
-  }
+	var msie = ua.indexOf('MSIE ');
+	if (msie > 0) {
+		// IE 10 or older => return version number
+		return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
+	}
 
-  var trident = ua.indexOf('Trident/');
-  if (trident > 0) {
-    // IE 11 => return version number
-    var rv = ua.indexOf('rv:');
-    return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
-  }
+	var trident = ua.indexOf('Trident/');
+	if (trident > 0) {
+		// IE 11 => return version number
+		var rv = ua.indexOf('rv:');
+		return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
+	}
 
-  var edge = ua.indexOf('Edge/');
-  if (edge > 0) {
-    // Edge (IE 12+) => return version number
-    return parseInt(ua.substring(edge + 5, ua.indexOf('.', edge)), 10);
-  }
+	var edge = ua.indexOf('Edge/');
+	if (edge > 0) {
+		// Edge (IE 12+) => return version number
+		return parseInt(ua.substring(edge + 5, ua.indexOf('.', edge)), 10);
+	}
 
-  // other browser
-  return -1;
+	// other browser
+	return -1;
 }
 
 var isIE = void 0;
 
 function initCompat() {
-  if (!initCompat.init) {
-    initCompat.init = true;
-    isIE = getInternetExplorerVersion() !== -1;
-  }
+	if (!initCompat.init) {
+		initCompat.init = true;
+		isIE = getInternetExplorerVersion() !== -1;
+	}
 }
 
 var ResizeObserver = { render: function render() {
-    var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('div', { staticClass: "resize-observer", attrs: { "tabindex": "-1" } });
-  }, staticRenderFns: [], _scopeId: 'data-v-b329ee4c',
-  name: 'resize-observer',
+		var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('div', { staticClass: "resize-observer", attrs: { "tabindex": "-1" } });
+	}, staticRenderFns: [], _scopeId: 'data-v-b329ee4c',
+	name: 'resize-observer',
 
-  methods: {
-    notify: function notify() {
-      this.$emit('notify');
-    },
-    addResizeHandlers: function addResizeHandlers() {
-      this._resizeObject.contentDocument.defaultView.addEventListener('resize', this.notify);
-      if (this._w !== this.$el.offsetWidth || this._h !== this.$el.offsetHeight) {
-        this.notify();
-      }
-    },
-    removeResizeHandlers: function removeResizeHandlers() {
-      if (this._resizeObject && this._resizeObject.onload) {
-        if (!isIE && this._resizeObject.contentDocument) {
-          this._resizeObject.contentDocument.defaultView.removeEventListener('resize', this.notify);
-        }
-        delete this._resizeObject.onload;
-      }
-    }
-  },
+	methods: {
+		notify: function notify() {
+			this.$emit('notify');
+		},
+		addResizeHandlers: function addResizeHandlers() {
+			this._resizeObject.contentDocument.defaultView.addEventListener('resize', this.notify);
+			if (this._w !== this.$el.offsetWidth || this._h !== this.$el.offsetHeight) {
+				this.notify();
+			}
+		},
+		removeResizeHandlers: function removeResizeHandlers() {
+			if (this._resizeObject && this._resizeObject.onload) {
+				if (!isIE && this._resizeObject.contentDocument) {
+					this._resizeObject.contentDocument.defaultView.removeEventListener('resize', this.notify);
+				}
+				delete this._resizeObject.onload;
+			}
+		}
+	},
 
-  mounted: function mounted() {
-    var _this = this;
+	mounted: function mounted() {
+		var _this = this;
 
-    initCompat();
-    this.$nextTick(function () {
-      _this._w = _this.$el.offsetWidth;
-      _this._h = _this.$el.offsetHeight;
-    });
-    var object = document.createElement('object');
-    this._resizeObject = object;
-    object.setAttribute('style', 'display: block; position: absolute; top: 0; left: 0; height: 100%; width: 100%; overflow: hidden; pointer-events: none; z-index: -1;');
-    object.onload = this.addResizeHandlers;
-    object.type = 'text/html';
-    if (isIE) {
-      this.$el.appendChild(object);
-    }
-    object.data = 'about:blank';
-    if (!isIE) {
-      this.$el.appendChild(object);
-    }
-  },
-  beforeDestroy: function beforeDestroy() {
-    this.removeResizeHandlers();
-  }
+		initCompat();
+		this.$nextTick(function () {
+			_this._w = _this.$el.offsetWidth;
+			_this._h = _this.$el.offsetHeight;
+		});
+		var object = document.createElement('object');
+		this._resizeObject = object;
+		object.setAttribute('style', 'display: block; position: absolute; top: 0; left: 0; height: 100%; width: 100%; overflow: hidden; pointer-events: none; z-index: -1;');
+		object.onload = this.addResizeHandlers;
+		object.type = 'text/html';
+		if (isIE) {
+			this.$el.appendChild(object);
+		}
+		object.data = 'about:blank';
+		if (!isIE) {
+			this.$el.appendChild(object);
+		}
+	},
+	beforeDestroy: function beforeDestroy() {
+		this.removeResizeHandlers();
+	}
 };
 
 // Install the components
 function install(Vue) {
-  Vue.component('resize-observer', ResizeObserver);
-  /* -- Add more components here -- */
+	Vue.component('resize-observer', ResizeObserver);
+	/* -- Add more components here -- */
 }
 
 /* -- Plugin definition & Auto-install -- */
@@ -1644,20 +1697,20 @@ function install(Vue) {
 
 // Plugin
 var plugin$2 = {
-  /* eslint-disable no-undef */
-  version: "0.4.1",
-  install: install
+	// eslint-disable-next-line no-undef
+	version: "0.4.2",
+	install: install
 };
 
 // Auto-install
 var GlobalVue$1 = null;
 if (typeof window !== 'undefined') {
-  GlobalVue$1 = window.Vue;
+	GlobalVue$1 = window.Vue;
 } else if (typeof global !== 'undefined') {
-  GlobalVue$1 = global.Vue;
+	GlobalVue$1 = global.Vue;
 }
 if (GlobalVue$1) {
-  GlobalVue$1.use(plugin$2);
+	GlobalVue$1.use(plugin$2);
 }
 
 function throwValueError(value) {
@@ -1780,7 +1833,7 @@ var redirectedMethods = ['panBy', 'panTo', 'panToBounds', 'fitBounds', 'getBound
 var redirectedEvents$1 = ['click', 'dblclick', 'drag', 'dragend', 'dragstart', 'mousemove', 'mouseout', 'mouseover', 'resize', 'rightclick', 'tilesloaded'];
 
 var Map = { render: function render() {
-		var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('div', { directives: [{ name: "observe-visibility", rawName: "v-observe-visibility", value: _vm.visibilityChanged, expression: "visibilityChanged" }], staticClass: "vue-google-map" }, [_c('div', { ref: "map", staticClass: "map-view" }), _c('div', { staticClass: "hidden-content" }, [_vm._t("default")], 2), _vm._t("visible"), _c('resize-observer', { on: { "notify": _vm.resize } })], 2);
+		var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('div', { directives: [{ name: "observe-visibility", rawName: "v-observe-visibility", value: _vm.visibilityChanged, expression: "visibilityChanged" }], staticClass: "vue-google-map" }, [_c('div', { ref: "map", staticClass: "map-view" }), _vm._v(" "), _c('div', { staticClass: "hidden-content" }, [_vm._t("default")], 2), _vm._v(" "), _vm._t("visible"), _vm._v(" "), _c('resize-observer', { on: { "notify": _vm.resize } })], 2);
 	}, staticRenderFns: [], _scopeId: 'data-v-3074bd5c',
 	name: 'GoogleMapsMap',
 
@@ -1819,30 +1872,9 @@ var Map = { render: function render() {
 		}
 	},
 
-	methods: _extends({}, redirectMethods({
-		target: function target() {
-			return this.$map;
-		},
-
-		names: redirectedMethods
-	}), {
-		resize: function resize() {
-			var preserveCenter = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-
-			if (this.$map) {
-				// let center
-				// preserveCenter && (center = this.$map.getCenter())
-				window.google.maps.event.trigger(this.$map, 'resize');
-				preserveCenter && this.$map.setCenter(this.lastCenter);
-			}
-		},
-		visibilityChanged: function visibilityChanged(isVisible) {
-			if (isVisible) {
-				this.$nextTick(this.resize);
-			}
-		}
-	}),
-
+	beforeCreate: function beforeCreate() {
+		this.$_mapPromises = [];
+	},
 	googleMapsReady: function googleMapsReady() {
 		var _this = this;
 
@@ -1856,23 +1888,64 @@ var Map = { render: function render() {
 			zoom: this.zoom
 		}, this.options);
 
-		this.$map = new window.google.maps.Map(element, options);
+		this.$_map = new window.google.maps.Map(element, options);
 
-		this.bindProps(this.$map, boundProps$1);
+		this.bindProps(this.$_map, boundProps$1);
 
-		this.listen(this.$map, 'bounds_changed', function () {
-			_this.$emit('update:bounds', _this.$map.getBounds());
+		this.listen(this.$_map, 'bounds_changed', function () {
+			_this.$emit('update:bounds', _this.$_map.getBounds());
 		});
 
-		this.listen(this.$map, 'idle', function () {
+		this.listen(this.$_map, 'idle', function () {
 			_this.$emit('idle');
-			_this.lastCenter = _this.$map.getCenter();
+			_this.lastCenter = _this.$_map.getCenter();
 		});
 
-		this.lastCenter = this.$map.getCenter();
+		this.lastCenter = this.$_map.getCenter();
 
-		this.redirectEvents(this.$map, redirectedEvents$1);
-	}
+		this.redirectEvents(this.$_map, redirectedEvents$1);
+
+		// Code that awaits `$_getMap()`
+		this.$_mapPromises.forEach(function (resolve) {
+			return resolve(_this.$_map);
+		});
+	},
+
+
+	methods: _extends({}, redirectMethods({
+		target: function target() {
+			return this.$_map;
+		},
+
+		names: redirectedMethods
+	}), {
+		resize: function resize() {
+			var preserveCenter = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+			if (this.$_map) {
+				// let center
+				// preserveCenter && (center = this.$_map.getCenter())
+				window.google.maps.event.trigger(this.$_map, 'resize');
+				preserveCenter && this.$_map.setCenter(this.lastCenter);
+			}
+		},
+		visibilityChanged: function visibilityChanged(isVisible) {
+			if (isVisible) {
+				this.$nextTick(this.resize);
+			}
+		},
+		$_getMap: function $_getMap() {
+			var _this2 = this;
+
+			if (this.$_map) {
+				return Promise.resolve(this.$_map);
+			} else {
+				return new Promise(function (resolve) {
+					_this2.$_mapPromises.push(resolve);
+				});
+			}
+		}
+	})
 };
 
 var boundProps$2 = ['animation', 'clickable', 'cursor', 'draggable', 'icon', 'label', 'opacity', 'place', 'position', 'shape', 'title', 'visible', 'zIndex'];
@@ -1936,15 +2009,20 @@ var Marker = {
 		}
 	},
 	googleMapsReady: function googleMapsReady() {
-		var options = this.$props;
-		options.map = this.$map;
-		this.$marker = new window.google.maps.Marker(options);
-		this.bindProps(this.$marker, boundProps$2);
-		this.redirectEvents(this.$marker, redirectedEvents$2);
+		var options = Object.assign({}, this.$props);
+		options.map = this.$_map;
+
+		if (options.position && typeof options.position.equals !== 'function') {
+			options.position = new window.google.maps.LatLng(options.position);
+		}
+
+		this.$_marker = new window.google.maps.Marker(options);
+		this.bindProps(this.$_marker, boundProps$2);
+		this.redirectEvents(this.$_marker, redirectedEvents$2);
 	},
 	beforeDestroy: function beforeDestroy() {
-		if (this.$marker) {
-			this.$marker.setMap(null);
+		if (this.$_marker) {
+			this.$_marker.setMap(null);
 		}
 	}
 };
@@ -1956,13 +2034,13 @@ var NearbyPlaces = {
 
 	methods: {
 		createServices: function createServices() {
-			this.$placeService = new window.google.maps.places.PlacesService(this.$refs.attributions);
+			this.$_placeService = new window.google.maps.places.PlacesService(this.$refs.attributions);
 		},
 		update: function update() {
 			var _this = this;
 
 			this.loading = true;
-			this.$placeService.nearbySearch(this.request, function (results, status) {
+			this.$_placeService.nearbySearch(this.request, function (results, status) {
 				_this.setResults(results, status);
 				_this.loading = false;
 			});
@@ -1977,13 +2055,13 @@ var PlaceDetails = {
 
 	methods: {
 		createServices: function createServices() {
-			this.$placeService = new window.google.maps.places.PlacesService(this.$refs.attributions);
+			this.$_placeService = new window.google.maps.places.PlacesService(this.$refs.attributions);
 		},
 		update: function update() {
 			var _this = this;
 
 			this.loading = true;
-			this.$placeService.getDetails(this.request, function (results, status) {
+			this.$_placeService.getDetails(this.request, function (results, status) {
 				_this.setResults(results, status);
 				_this.loading = false;
 			});
@@ -2077,7 +2155,7 @@ var UserPosition = {
 	methods: {
 		startWatch: function startWatch() {
 			if (navigator.geolocation) {
-				this._watchId = navigator.geolocation.watchPosition(this.updatePosition, this.onWatchError, this.positionOptions);
+				this.$_watchId = navigator.geolocation.watchPosition(this.updatePosition, this.onWatchError, this.positionOptions);
 			} else {
 				console.warn('GoogleMapsUserPosition: navigator.geolocation not supported');
 				this.$emit('error', new Error('unsupported'));
@@ -2085,7 +2163,7 @@ var UserPosition = {
 		},
 		stopWatch: function stopWatch() {
 			if (navigator.geolocation) {
-				navigator.geolocation.clearWatch(this._watchId);
+				navigator.geolocation.clearWatch(this.$_watchId);
 			}
 		},
 		updatePosition: function updatePosition(position) {
@@ -2160,7 +2238,7 @@ function registerComponents(Vue, prefix) {
 
 var plugin = {
 	// eslint-disable-next-line no-undef
-	version: "0.0.1",
+	version: "0.0.3",
 	install: function install(Vue, options) {
 		var finalOptions = Object.assign({}, {
 			installComponents: true,

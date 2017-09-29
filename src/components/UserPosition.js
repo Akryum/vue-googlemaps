@@ -87,7 +87,7 @@ export default {
 	methods: {
 		startWatch () {
 			if (navigator.geolocation) {
-				this._watchId = navigator.geolocation.watchPosition(
+				this.$_watchId = navigator.geolocation.watchPosition(
 					this.updatePosition,
 					this.onWatchError,
 					this.positionOptions
@@ -100,7 +100,7 @@ export default {
 
 		stopWatch () {
 			if (navigator.geolocation) {
-				navigator.geolocation.clearWatch(this._watchId)
+				navigator.geolocation.clearWatch(this.$_watchId)
 			}
 		},
 

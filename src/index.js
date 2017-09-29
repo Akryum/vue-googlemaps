@@ -1,5 +1,3 @@
-import 'vue-resize/dist/vue-resize.css'
-
 import 'regenerator-runtime/runtime'
 import loader from './lib-loader'
 import { optionMergeStrategies } from './options'

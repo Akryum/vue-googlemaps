@@ -12,7 +12,7 @@ export default {
 	],
 
 	created () {
-		const mapAncestor = this.$findAncestor(
+		const mapAncestor = this.$_findAncestor(
 			a => a.$options.name === 'GoogleMapsMap'
 		)
 
@@ -20,10 +20,11 @@ export default {
 			throw new Error(`${this.constructor.name} component must be used within a <google-map> component.`)
 		}
 
-		this.$mapAncestor = mapAncestor
+		this.$_mapAncestor = mapAncestor
 	},
 
-	googleMapsReady () {
-		this.$map = this.$mapAncestor.$map
+	async googleMapsPrepare () {
+		const mapComp = this.$_mapAncestor
+		this.$_map = await mapComp.$_getMap()
 	},
 }

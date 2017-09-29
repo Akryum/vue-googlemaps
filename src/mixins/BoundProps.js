@@ -1,10 +1,14 @@
 import { bindProp } from '../utils/bind-prop'
 
 export default {
+	beforeDestroy () {
+		this.unbindProps()
+	},
+
 	methods: {
 		bindProps (target, props) {
 			this.unbindProps()
-			this._boundsProps = []
+			this.$_boundsProps = []
 			for (const prop of props) {
 				let options = {
 					vm: this,
@@ -15,17 +19,14 @@ export default {
 				} else {
 					Object.assign(options, prop)
 				}
-				this._boundsProps.push(bindProp(options))
+				this.$_boundsProps.push(bindProp(options))
 			}
 		},
 
 		unbindProps () {
-			if (this._boundsProps) {
-				this._boundsProps.forEach(unbind => unbind())
+			if (this.$_boundsProps) {
+				this.$_boundsProps.forEach(unbind => unbind())
 			}
 		},
-	},
-	beforeDestroy () {
-		this.unbindProps()
 	},
 }

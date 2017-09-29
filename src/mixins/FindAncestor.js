@@ -1,6 +1,6 @@
 export default {
 	methods: {
-		$findAncestor (condition) {
+		$_findAncestor (condition) {
 			let search = this.$parent
 
 			while (search) {

@@ -68,7 +68,7 @@ export default {
 
 	methods: {
 		updateOptions (options) {
-			this.$circle && this.$circle.setOptions(options || this.$props)
+			this.$_circle && this.$_circle.setOptions(options || this.$props)
 		},
 	},
 
@@ -79,14 +79,14 @@ export default {
 	googleMapsReady () {
 		const options = this.$props
 		options.map = this.$map
-		this.$circle = new window.google.maps.Circle(options)
-		this.bindProps(this.$circle, boundProps)
-		this.redirectEvents(this.$circle, redirectedEvents)
+		this.$_circle = new window.google.maps.Circle(options)
+		this.bindProps(this.$_circle, boundProps)
+		this.redirectEvents(this.$_circle, redirectedEvents)
 	},
 
 	beforeDestroy () {
-		if (this.$circle) {
-			this.$circle.setMap(null)
+		if (this.$_circle) {
+			this.$_circle.setMap(null)
 		}
 	},
 }

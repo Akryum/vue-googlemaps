@@ -109,28 +109,8 @@ export default {
 		},
 	},
 
-	methods: {
-		...redirectMethods({
-			target () {
-				return this.$map
-			},
-			names: redirectedMethods,
-		}),
-
-		resize (preserveCenter = true) {
-			if (this.$map) {
-				// let center
-				// preserveCenter && (center = this.$map.getCenter())
-				window.google.maps.event.trigger(this.$map, 'resize')
-				preserveCenter && this.$map.setCenter(this.lastCenter)
-			}
-		},
-
-		visibilityChanged (isVisible) {
-			if (isVisible) {
-				this.$nextTick(this.resize)
-			}
-		},
+	beforeCreate () {
+		this.$_mapPromises = []
 	},
 
 	googleMapsReady () {
@@ -145,40 +125,81 @@ export default {
 			...this.options,
 		}
 
-		this.$map = new window.google.maps.Map(element, options)
+		this.$_map = new window.google.maps.Map(element, options)
 
-		this.bindProps(this.$map, boundProps)
+		this.bindProps(this.$_map, boundProps)
 
-		this.listen(this.$map, 'bounds_changed', () => {
-			this.$emit('update:bounds', this.$map.getBounds())
+		this.listen(this.$_map, 'bounds_changed', () => {
+			this.$emit('update:bounds', this.$_map.getBounds())
 		})
 
-		this.listen(this.$map, 'idle', () => {
+		this.listen(this.$_map, 'idle', () => {
 			this.$emit('idle')
-			this.lastCenter = this.$map.getCenter()
+			this.lastCenter = this.$_map.getCenter()
 		})
 
-		this.lastCenter = this.$map.getCenter()
+		this.lastCenter = this.$_map.getCenter()
 
-		this.redirectEvents(this.$map, redirectedEvents)
+		this.redirectEvents(this.$_map, redirectedEvents)
+
+		// Code that awaits `$_getMap()`
+		this.$_mapPromises.forEach(resolve => resolve(this.$_map))
+	},
+
+	methods: {
+		...redirectMethods({
+			target () {
+				return this.$_map
+			},
+			names: redirectedMethods,
+		}),
+
+		resize (preserveCenter = true) {
+			if (this.$_map) {
+				// let center
+				// preserveCenter && (center = this.$_map.getCenter())
+				window.google.maps.event.trigger(this.$_map, 'resize')
+				preserveCenter && this.$_map.setCenter(this.lastCenter)
+			}
+		},
+
+		visibilityChanged (isVisible) {
+			if (isVisible) {
+				this.$nextTick(this.resize)
+			}
+		},
+
+		$_getMap () {
+			if (this.$_map) {
+				return Promise.resolve(this.$_map)
+			} else {
+				return new Promise(resolve => {
+					this.$_mapPromises.push(resolve)
+				})
+			}
+		},
 	},
 }
 </script>
 
-<style scoped>
+<style lang="stylus">
+@import '../../node_modules/vue-resize/dist/vue-resize.css';
+</style>
+
+<style lang="stylus" scoped>
 .vue-google-map {
 	position: relative;
-}
 
-.vue-google-map .map-view {
-	left: 0;
-	right: 0;
-	top: 0;
-	bottom: 0;
-	position: absolute;
-}
+	.map-view {
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		position: absolute;
+	}
 
-.vue-google-map .hidden-content {
-	display: none;
+	.hidden-content {
+		display: none;
+	}
 }
 </style>
