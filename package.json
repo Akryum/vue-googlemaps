@@ -1,6 +1,6 @@
 {
   "name": "vue-googlemaps",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Embed Google Maps in Vue apps",
   "main": "dist/vue-googlemaps.umd.js",
   "module": "dist/vue-googlemaps.esm.js",
@@ -44,7 +44,8 @@
     "rollup-plugin-uglify": "^2.0.1",
     "rollup-plugin-vue": "^2.4.1",
     "stylus": "^0.54.5",
-    "uglify-es": "^3.0.28"
+    "uglify-es": "^3.0.28",
+    "vue-template-compiler": "^2.4.4"
   },
   "peerDependencies": {
     "vue": "^2.4.2"
