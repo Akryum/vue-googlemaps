@@ -62,7 +62,7 @@ export default {
 			return {
 				loading: this.loading,
 				results: this.finalResults,
-				staus: this.staus,
+				status: this.status,
 			}
 		},
 
