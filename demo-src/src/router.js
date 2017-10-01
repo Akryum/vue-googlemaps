@@ -7,7 +7,7 @@ import LocationGeocoder from './components/LocationGeocoder.vue'
 import PlaceDetails from './components/PlaceDetails.vue'
 
 const router = new VueRouter({
-	mode: 'history',
+	mode: 'hash',
 	routes: [
 		{ path: '/', name: 'simple', component: SimpleMap },
 		{ path: '/nearby', name: 'nearby', component: NearbyPlaces },

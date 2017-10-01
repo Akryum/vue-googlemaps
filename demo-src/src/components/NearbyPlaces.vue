@@ -138,8 +138,10 @@ export default {
 }
 
 .results-pane {
-	overflow: auto;
+	overflow-x: auto;
+	overflow-y: auto;
 	width: 400px;
+	height: calc(100vh - 64px);
 	position: relative;
 
 	.photo {
