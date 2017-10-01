@@ -1485,7 +1485,7 @@ var Service = {
 		},
 		request: {
 			type: Object,
-			required: true
+			default: null
 		},
 		tag: {
 			type: String,
@@ -1518,8 +1518,14 @@ var Service = {
 
 	watch: {
 		request: {
-			handler: 'update',
+			handler: function handler(value) {
+				value && this.update();
+			},
+
 			deep: true
+		},
+		finalResults: function finalResults(value) {
+			this.$emit('results', value);
 		}
 	},
 
@@ -1532,7 +1538,7 @@ var Service = {
 			return {
 				loading: this.loading,
 				results: this.finalResults,
-				staus: this.staus
+				status: this.status
 			};
 		},
 		setResults: function setResults(results, status) {
@@ -1546,10 +1552,10 @@ var Service = {
 
 	googleMapsReady: function googleMapsReady() {
 		this.createServices();
-		this.update();
+		this.request && this.update();
 	},
 	render: function render(h) {
-		return h(this.tag, [this.$scopedSlots.default(this.getScope()), h('span', {
+		return h(this.tag, [this.$scopedSlots.default && this.$scopedSlots.default(this.getScope()), h('span', {
 			ref: 'attributions'
 		})]);
 	}
@@ -1897,7 +1903,7 @@ var Map = { render: function render() {
 		});
 
 		this.listen(this.$_map, 'idle', function () {
-			_this.$emit('idle');
+			_this.$emit('idle', _this);
 			_this.lastCenter = _this.$_map.getCenter();
 		});
 
@@ -2234,7 +2240,7 @@ function registerComponents(Vue, prefix) {
 
 var plugin = {
 	// eslint-disable-next-line no-undef
-	version: "0.0.5",
+	version: "0.0.6",
 	install: function install(Vue, options) {
 		var finalOptions = Object.assign({}, {
 			installComponents: true,
