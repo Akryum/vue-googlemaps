@@ -106,25 +106,25 @@ Vue.use(VueGoogleMaps, {
 />
 
 <googlemaps-nearby-places
-	:request="{
-		bounds: mapBounds	
-	}"
-	:filter="result => !result.types.includes('locality')"
+  :request="{
+    bounds: mapBounds	
+  }"
+  :filter="result => !result.types.includes('locality')"
   @results="results => ..."
 >
-	<template scope="props">
-		<div v-if="props.loading">Loading...</div>
+  <template scope="props">
+    <div v-if="props.loading">Loading...</div>
 
-		<div v-for="result of props.result">
-			<div>
-				<img
-					v-if="result.photos"
-					:src="result.photos[0].getUrl({ maxWidth: 80, maxHeight: 80 })"
-				/>
-				{{ result.name }}
-			</div>
-			<div>{{ result.vicinity }}</div>
-		</div>
-	</template>
+    <div v-for="result of props.result">
+      <div>
+        <img
+          v-if="result.photos"
+          :src="result.photos[0].getUrl({ maxWidth: 80, maxHeight: 80 })"
+        />
+        {{ result.name }}
+      </div>
+      <div>{{ result.vicinity }}</div>
+    </div>
+  </template>
 </googlemaps-nearby-places>
 ```
