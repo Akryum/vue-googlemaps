@@ -72,7 +72,9 @@ Vue.use(VueGoogleMaps, {
 <googlemaps-place-details
   :request="{
     placeId: placeId
-  }">
+  }"
+  @results="results => ..."
+>
   <template scope="props">
     <div class="name">{{ props.results.name }}</div>
     <div class="address">{{ props.results.formatted_address }}</div>
@@ -86,10 +88,43 @@ Vue.use(VueGoogleMaps, {
 <googlemaps-geocoder
   :request="{
     location: latLng,
-  }">
+  }"
+  @results="results => ..."
+>
   <template scope="props">
     <div class="name">{{ props.results[1].name }}</div>
     <div class="address">{{ props.results[0].formatted_address }}</div>
   </template>
 </googlemaps-geocoder>
+```
+
+### Nearby places
+
+```html
+<googlemaps-map
+  @idle="map => mapBounds = map.getBounds()"
+/>
+
+<googlemaps-nearby-places
+	:request="{
+		bounds: mapBounds	
+	}"
+	:filter="result => !result.types.includes('locality')"
+  @results="results => ..."
+>
+	<template scope="props">
+		<div v-if="props.loading">Loading...</div>
+
+		<div v-for="result of props.result">
+			<div>
+				<img
+					v-if="result.photos"
+					:src="result.photos[0].getUrl({ maxWidth: 80, maxHeight: 80 })"
+				/>
+				{{ result.name }}
+			</div>
+			<div>{{ result.vicinity }}</div>
+		</div>
+	</template>
+</googlemaps-nearby-places>
 ```

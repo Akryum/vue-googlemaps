@@ -12,7 +12,7 @@ export default {
 		},
 		request: {
 			type: Object,
-			required: true,
+			default: null,
 		},
 		tag: {
 			type: String,
@@ -45,8 +45,13 @@ export default {
 
 	watch: {
 		request: {
-			handler: 'update',
+			handler (value) {
+				value && this.update()
+			},
 			deep: true,
+		},
+		finalResults (value) {
+			this.$emit('results', value)
 		},
 	},
 
@@ -60,7 +65,7 @@ export default {
 			return {
 				loading: this.loading,
 				results: this.finalResults,
-				staus: this.staus,
+				status: this.status,
 			}
 		},
 
@@ -76,12 +81,12 @@ export default {
 
 	googleMapsReady () {
 		this.createServices()
-		this.update()
+		this.request && this.update()
 	},
 
 	render (h) {
 		return h(this.tag, [
-			this.$scopedSlots.default(this.getScope()),
+			this.$scopedSlots.default && this.$scopedSlots.default(this.getScope()),
 			h('span', {
 				ref: 'attributions',
 			}),

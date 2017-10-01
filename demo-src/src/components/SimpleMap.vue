@@ -1,15 +1,22 @@
 <template>
-	<div class="simple-demo">
+	<div class="simple-map demo">
 		<!-- Toolbar -->
 		<md-toolbar>
-			<h2 class="md-title" style="flex: 1;">Simple vue-googlemaps demo</h2>
+			<md-button
+				class="md-icon-button"
+				@click="toggleSideNav"
+			>
+				<md-icon>menu</md-icon>
+			</md-button>
+
+			<h2 class="md-title" style="flex: 1;">Simple map</h2>
 			
 			<md-button
 				class="md-icon-button"
 				:disabled="!userPosition"
 				@click="centerOnUser"
 			>
-				<md-icon>gps_fixed</md-icon>
+				<md-icon>my_location</md-icon>
 			</md-button>
 		</md-toolbar>
 		
@@ -33,6 +40,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
 	data () {
 		return {
@@ -46,6 +55,10 @@ export default {
 	},
 
 	methods: {
+		...mapActions('layout', [
+			'toggleSideNav',
+		]),
+
 		centerOnUser () {
 			if (this.userPosition) {
 				this.center = this.userPosition
@@ -60,7 +73,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.simple-demo {
+.demo {
 	height: 100%;
 	display: flex;
 	flex-direction: column;

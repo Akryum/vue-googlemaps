@@ -134,7 +134,7 @@ export default {
 		})
 
 		this.listen(this.$_map, 'idle', () => {
-			this.$emit('idle')
+			this.$emit('idle', this)
 			this.lastCenter = this.$_map.getCenter()
 		})
 
