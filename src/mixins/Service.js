@@ -83,7 +83,7 @@ export default {
 
 	render (h) {
 		return h(this.tag, [
-			this.$scopedSlots.default(this.getScope()),
+			this.$scopedSlots.default && this.$scopedSlots.default(this.getScope()),
 			h('span', {
 				ref: 'attributions',
 			}),
