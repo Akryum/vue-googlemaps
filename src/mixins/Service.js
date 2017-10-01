@@ -50,6 +50,9 @@ export default {
 			},
 			deep: true,
 		},
+		finalResults (value) {
+			this.$emit('results', value)
+		},
 	},
 
 	methods: {
