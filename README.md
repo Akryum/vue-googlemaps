@@ -20,6 +20,8 @@ npm i -S vue-googlemaps
 yarn add vue-googlemaps
 ```
 
+*You need to [polyfill](https://babeljs.io/docs/usage/polyfill/) some ES2015 features in old browsers.*
+
 ## Usage
 
 ```js
