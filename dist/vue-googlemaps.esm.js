@@ -930,7 +930,8 @@ var loader = {
 		var apiKey = _ref.apiKey,
 		    version = _ref.version,
 		    libraries = _ref.libraries,
-		    loadCn = _ref.loadCn;
+		    loadCn = _ref.loadCn,
+		    useBetaRenderer = _ref.useBetaRenderer;
 
 		if (typeof window === 'undefined') {
 			// Do nothing if run from server-side
@@ -975,8 +976,10 @@ var loader = {
 				return encodeURIComponent(key) + '=' + encodeURIComponent(options[key]);
 			}).join('&');
 
-			if (version) {
-				url = url + '&v=' + version;
+			var usingBetaRenderer = version && version === '3.exp' || typeof useBetaRenderer === 'boolean' && useBetaRenderer === true;
+
+			if (usingBetaRenderer || version) {
+				url = url + '&v=' + (usingBetaRenderer ? '3.exp&slippy=true' : version);
 			}
 
 			googleMapScript.setAttribute('src', url);
@@ -1876,6 +1879,7 @@ var Map = { render: function render() {
 			type: Number
 		},
 		zoom: {
+			required: true,
 			type: Number
 		}
 	},
@@ -2242,7 +2246,7 @@ function registerComponents(Vue, prefix) {
 
 var plugin = {
 	// eslint-disable-next-line no-undef
-	version: "0.1.0",
+	version: "0.1.1",
 	install: function install(Vue, options) {
 		var finalOptions = Object.assign({}, {
 			installComponents: true,
