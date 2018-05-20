@@ -30,6 +30,8 @@ npm i -S vue-googlemaps
 yarn add vue-googlemaps
 ```
 
+*You need to [polyfill](https://babeljs.io/docs/usage/polyfill/) some ES2015 features in old browsers.*
+
 ## Usage
 
 You need a Google API key from the [devlopper console](http://console.developers.google.com/).
@@ -44,6 +46,8 @@ Vue.use(VueGoogleMaps, {
     apiKey: 'your-google-api-key',
     // Enable more Google Maps libraries here
     libraries: ['places'],
+    // Use new renderer
+    useBetaRenderer: false,
   },
 })
 ```
