@@ -2242,7 +2242,7 @@ function registerComponents(Vue, prefix) {
 
 var plugin = {
 	// eslint-disable-next-line no-undef
-	version: "0.0.7",
+	version: "0.1.0",
 	install: function install(Vue, options) {
 		var finalOptions = Object.assign({}, {
 			installComponents: true,
@@ -2273,5 +2273,5 @@ if (GlobalVue) {
 	GlobalVue.use(plugin);
 }
 
-export { Circle, Geocoder, Map, Marker, NearbyPlaces, PlaceDetails, UserPosition };
+export { Circle, Geocoder, Map, Marker, NearbyPlaces, PlaceDetails, UserPosition, MapElement };
 export default plugin;
