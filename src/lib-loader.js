@@ -14,7 +14,7 @@ const loader = {
 	 * @param loadCn    Boolean. If set to true, the map will be loaded form goole maps China
 	 *                  (@see https://developers.google.com/maps/documentation/javascript/basics#GoogleMapsChina)
 	 */
-	load ({ apiKey, version, libraries, loadCn }) {
+	load ({ apiKey, version, libraries, loadCn, useBetaRenderer }) {
 		if (typeof window === 'undefined') {
 			// Do nothing if run from server-side
 			return Promise.resolve()
@@ -58,8 +58,11 @@ const loader = {
 				.map((key) => encodeURIComponent(key) + '=' + encodeURIComponent(options[key]))
 				.join('&')
 
-			if (version) {
-				url = url + '&v=' + version
+			const usingBetaRenderer = (version && version === '3.exp') ||
+				(typeof useBetaRenderer === 'boolean' && useBetaRenderer === true)
+
+			if (usingBetaRenderer || version) {
+				url = url + '&v=' + (usingBetaRenderer ? '3.exp&slippy=true' : version)
 			}
 
 			googleMapScript.setAttribute('src', url)
