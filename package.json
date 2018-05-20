@@ -1,6 +1,6 @@
 {
   "name": "vue-googlemaps",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Embed Google Maps in Vue apps",
   "main": "dist/vue-googlemaps.umd.js",
   "module": "dist/vue-googlemaps.esm.js",
