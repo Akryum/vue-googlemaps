@@ -160,7 +160,7 @@ export default {
   }"
   @results="results => ..."
 >
-  <template scope="props">
+  <template slot-scope="props">
     <div class="name">{{ props.results.name }}</div>
     <div class="address">{{ props.results.formatted_address }}</div>
   </template>
@@ -176,7 +176,7 @@ export default {
   }"
   @results="results => ..."
 >
-  <template scope="props">
+  <template slot-scope="props">
     <div class="name">{{ props.results[1].name }}</div>
     <div class="address">{{ props.results[0].formatted_address }}</div>
   </template>
@@ -197,7 +197,7 @@ export default {
   :filter="result => !result.types.includes('locality')"
   @results="results => ..."
 >
-  <template scope="props">
+  <template slot-scope="props">
     <div v-if="props.loading">Loading...</div>
 
     <div v-for="result of props.result">
