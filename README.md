@@ -75,20 +75,20 @@ import { MapElement } from 'vue-googlemaps'
 // Those Vue props will update automatically
 // (Two-way binding with .sync modifier)
 const boundProps = [
-	'animation',
-	'clickable',
-	'cursor',
-	'draggable',
-	// ...
+  'animation',
+  'clickable',
+  'cursor',
+  'draggable',
+  // ...
 ]
 
 // Events from Google Maps emitted as Vue events
 const redirectedEvents = [
-	'click',
-	'rightclick',
-	'dblclick',
-	'drag',
-	// ...
+  'click',
+  'rightclick',
+  'dblclick',
+  'drag',
+  // ...
 ]
 
 export default {
@@ -99,23 +99,23 @@ export default {
 
   // When Google Maps is ready
   googleMapsReady () {
-		const options = Object.assign({}, this.$props)
-		options.map = this.$_map
+    const options = Object.assign({}, this.$props)
+    options.map = this.$_map
 
     // Create Google Maps objects
     this.$_marker = new window.google.maps.Marker(options)
     // Bind the Vue props
     this.bindProps(this.$_marker, boundProps)
     // Emit the events from Google Maps
-		this.redirectEvents(this.$_marker, redirectedEvents)
-	},
+    this.redirectEvents(this.$_marker, redirectedEvents)
+  },
 
-	beforeDestroy () {
+  beforeDestroy () {
     // Teardown
-		if (this.$_marker) {
-			this.$_marker.setMap(null)
-		}
-	},
+    if (this.$_marker) {
+      this.$_marker.setMap(null)
+    }
+  },
 }
 ```
 
