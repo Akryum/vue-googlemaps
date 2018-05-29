@@ -34,7 +34,7 @@ yarn add vue-googlemaps
 
 ## Usage
 
-You need a Google API key from the [devlopper console](http://console.developers.google.com/).
+You need a Google API key from the [developer console](http://console.developers.google.com/).
 
 ```js
 import 'vue-googlemaps/dist/vue-googlemaps.css'
