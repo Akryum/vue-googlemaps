@@ -12,6 +12,15 @@ Integrate Google Maps in your Vue application in a "Vue-way".
 
 The main objective of the library is to use Google Maps using Vue components in a way that feels natural to Vue developpers (with props, events, slots...).
 
+
+<p>
+  <a href="https://www.patreon.com/akryum" target="_blank">
+    <img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" alt="Become a Patreon">
+  </a>
+</p>
+
+<br>
+
 ## Table of Contents
 
 - [Installation](#installation)
