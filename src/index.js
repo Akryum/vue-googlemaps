@@ -10,11 +10,15 @@ import Marker from './components/Marker'
 import NearbyPlaces from './components/NearbyPlaces'
 import PlaceDetails from './components/PlaceDetails'
 import UserPosition from './components/UserPosition'
+import Polyline from './components/Polyline'
+import Rectangle from './components/Rectangle'
+import Polygon from './components/Polygon'
 
 import MapElement from './mixins/MapElement'
 
 export {
 	Circle,
+	Rectangle,
 	Geocoder,
 	Map,
 	Marker,
@@ -22,16 +26,21 @@ export {
 	PlaceDetails,
 	UserPosition,
 	MapElement,
+	Polyline,
+	Polygon
 }
 
 function registerComponents (Vue, prefix) {
 	Vue.component(`${prefix}circle`, Circle)
+	Vue.component(`${prefix}rectangle`, Rectangle)
 	Vue.component(`${prefix}geocoder`, Geocoder)
 	Vue.component(`${prefix}map`, Map)
 	Vue.component(`${prefix}marker`, Marker)
 	Vue.component(`${prefix}nearby-places`, NearbyPlaces)
 	Vue.component(`${prefix}place-details`, PlaceDetails)
 	Vue.component(`${prefix}user-position`, UserPosition)
+	Vue.component(`${prefix}polyline`, Polyline)
+	Vue.component(`${prefix}polygon`, Polygon)
 }
 
 const plugin = {

@@ -45,6 +45,7 @@ const boundProps = [
 	'mapTypeId',
 	'tilt',
 	'zoom',
+	'options',
 ]
 
 const redirectedMethods = [
@@ -61,6 +62,8 @@ const redirectedEvents = [
 	'drag',
 	'dragend',
 	'dragstart',
+	'mousedown',
+	'mouseup',
 	'mousemove',
 	'mouseout',
 	'mouseover',
@@ -147,6 +150,13 @@ export default {
 		this.$_mapPromises.forEach(resolve => resolve(this.$_map))
 	},
 
+	watch: {
+		options: {
+			handler: 'updateOptions',
+			deep: true,
+		},
+	},
+
 	methods: {
 		...redirectMethods({
 			target () {
@@ -178,6 +188,10 @@ export default {
 					this.$_mapPromises.push(resolve)
 				})
 			}
+		},
+
+		updateOptions (options) {
+			this.$_map && this.$_map.setOptions(options || this.$props)
 		},
 	},
 }
