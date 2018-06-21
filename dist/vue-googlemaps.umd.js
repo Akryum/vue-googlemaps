@@ -2240,6 +2240,50 @@ var UserPosition = {
 	}
 };
 
+var boundProps$3 = ['draggable', 'editable', 'options', 'path'];
+
+var redirectedEvents$3 = ['click', 'rightclick', 'dblclick', 'drag', 'dragstart', 'dragend', 'mouseup', 'mousedown', 'mouseover', 'mouseout'];
+
+var Polyline = {
+	name: 'GoogleMapsPolyline',
+
+	mixins: [MapElement],
+
+	props: {
+		editable: {
+			type: Boolean,
+			default: false
+		},
+		draggable: {
+			type: Boolean,
+			default: false
+		},
+		options: {
+			type: Object
+		},
+		path: {
+			type: Array
+		}
+	},
+
+	render: function render(h) {
+		return '';
+	},
+	googleMapsReady: function googleMapsReady() {
+		var options = Object.assign({}, this.$props);
+		options.map = this.$_map;
+
+		this.$_polyline = new window.google.maps.Polyline(options);
+		this.bindProps(this.$_polyline, boundProps$3);
+		this.redirectEvents(this.$_polyline, redirectedEvents$3);
+	},
+	beforeDestroy: function beforeDestroy() {
+		if (this.$_polyline) {
+			this.$_polyline.setMap(null);
+		}
+	}
+};
+
 function registerComponents(Vue, prefix) {
 	Vue.component(prefix + 'circle', Circle);
 	Vue.component(prefix + 'geocoder', Geocoder);
@@ -2248,6 +2292,7 @@ function registerComponents(Vue, prefix) {
 	Vue.component(prefix + 'nearby-places', NearbyPlaces);
 	Vue.component(prefix + 'place-details', PlaceDetails);
 	Vue.component(prefix + 'user-position', UserPosition);
+	Vue.component(prefix + 'polyline', Polyline);
 }
 
 var plugin = {
@@ -2291,6 +2336,7 @@ exports.NearbyPlaces = NearbyPlaces;
 exports.PlaceDetails = PlaceDetails;
 exports.UserPosition = UserPosition;
 exports.MapElement = MapElement;
+exports.Polyline = Polyline;
 exports['default'] = plugin;
 
 Object.defineProperty(exports, '__esModule', { value: true });

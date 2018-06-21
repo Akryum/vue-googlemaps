@@ -10,6 +10,7 @@ import Marker from './components/Marker'
 import NearbyPlaces from './components/NearbyPlaces'
 import PlaceDetails from './components/PlaceDetails'
 import UserPosition from './components/UserPosition'
+import Polyline from './components/Polyline'
 
 import MapElement from './mixins/MapElement'
 
@@ -22,6 +23,7 @@ export {
 	PlaceDetails,
 	UserPosition,
 	MapElement,
+	Polyline,
 }
 
 function registerComponents (Vue, prefix) {
@@ -32,6 +34,7 @@ function registerComponents (Vue, prefix) {
 	Vue.component(`${prefix}nearby-places`, NearbyPlaces)
 	Vue.component(`${prefix}place-details`, PlaceDetails)
 	Vue.component(`${prefix}user-position`, UserPosition)
+	Vue.component(`${prefix}polyline`, Polyline)
 }
 
 const plugin = {
