@@ -55,6 +55,9 @@ export default {
 		this.$_polyline = new window.google.maps.Polyline(options)
 		this.bindProps(this.$_polyline, boundProps)
 		this.redirectEvents(this.$_polyline, redirectedEvents)
+		this.listen(this.$_polyline, 'drag', () => {
+			this.$emit('path_changed', this.$_polyline.getPath())
+		})
 	},
 
 	beforeDestroy () {

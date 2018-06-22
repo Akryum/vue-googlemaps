@@ -2264,12 +2264,17 @@ var Polyline = {
 		return '';
 	},
 	googleMapsReady: function googleMapsReady() {
+		var _this = this;
+
 		var options = Object.assign({}, this.$props);
 		options.map = this.$_map;
 
 		this.$_polyline = new window.google.maps.Polyline(options);
 		this.bindProps(this.$_polyline, boundProps$3);
 		this.redirectEvents(this.$_polyline, redirectedEvents$3);
+		this.listen(this.$_polyline, 'drag', function () {
+			_this.$emit('path_changed', _this.$_polyline.getPath());
+		});
 	},
 	beforeDestroy: function beforeDestroy() {
 		if (this.$_polyline) {
