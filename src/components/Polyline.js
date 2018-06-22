@@ -38,6 +38,7 @@ export default {
 		},
 		options: {
 			type: Object,
+			default: () => ({}),
 		},
 		path: {
 			type: Array,

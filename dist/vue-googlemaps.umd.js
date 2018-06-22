@@ -2259,7 +2259,10 @@ var Polyline = {
 			default: false
 		},
 		options: {
-			type: Object
+			type: Object,
+			default: function _default() {
+				return {};
+			}
 		},
 		path: {
 			type: Array
