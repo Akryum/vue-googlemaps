@@ -44,6 +44,16 @@ export default {
 		},
 	},
 
+	watch: {
+		options: 'updateOptions',
+	},
+
+	methods: {
+		updateOptions (options) {
+			this.$_polyline && this.$_polyline.setOptions(options || this.$props)
+		},
+	},
+
 	render (h) {
 		return ''
 	},

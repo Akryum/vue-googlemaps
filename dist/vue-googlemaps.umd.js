@@ -2266,6 +2266,16 @@ var Polyline = {
 		}
 	},
 
+	watch: {
+		options: 'updateOptions'
+	},
+
+	methods: {
+		updateOptions: function updateOptions(options) {
+			this.$_polyline && this.$_polyline.setOptions(options || this.$props);
+		}
+	},
+
 	render: function render(h) {
 		return '';
 	},
