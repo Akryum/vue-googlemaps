@@ -14,7 +14,7 @@ const loader = {
 	 * @param loadCn    Boolean. If set to true, the map will be loaded form goole maps China
 	 *                  (@see https://developers.google.com/maps/documentation/javascript/basics#GoogleMapsChina)
 	 */
-	load ({ apiKey, version, libraries, loadCn, useBetaRenderer }) {
+	load ({ apiKey, version, libraries, loadCn, useNewFeatures = true }) {
 		if (typeof window === 'undefined') {
 			// Do nothing if run from server-side
 			return Promise.resolve()
@@ -47,23 +47,24 @@ const loader = {
 			}
 			options['callback'] = 'VueGoogleMapsLoaded'
 
-			let baseUrl = 'https://maps.googleapis.com/'
+      const baseUrl = (typeof loadCn === 'boolean' && loadCn === true)
+        ? 'http://maps.google.cn'
+        : 'https://maps.googleapis.com'
 
-			if (typeof loadCn === 'boolean' && loadCn === true) {
-				baseUrl = 'http://maps.google.cn/'
-			}
+      const urlParams = Object.keys(options)
+        .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(options[key])}`)
+        .join('&')
 
-			let url = baseUrl + 'maps/api/js?' +
-			Object.keys(options)
-				.map((key) => encodeURIComponent(key) + '=' + encodeURIComponent(options[key]))
-				.join('&')
+			let url = `${baseUrl}/maps/api/js?${urlParams}`
 
-			const usingBetaRenderer = (version && version === '3.exp') ||
-				(typeof useBetaRenderer === 'boolean' && useBetaRenderer === true)
+      // Override version if they do not want to use the new renderer/base map
+      if (!useNewFeatures) {
+        version = '3.31'
+      }
 
-			if (usingBetaRenderer || version) {
-				url = url + '&v=' + (usingBetaRenderer ? '3.exp&slippy=true' : version)
-			}
+			if (version) {
+        url = `${url}&v=${version}`
+      }
 
 			googleMapScript.setAttribute('src', url)
 			googleMapScript.setAttribute('async', '')
