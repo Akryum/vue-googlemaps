@@ -10,13 +10,10 @@ function createCommonjsModule(fn, module) {
 
 var runtime = createCommonjsModule(function (module) {
 /**
- * Copyright (c) 2014, Facebook, Inc.
- * All rights reserved.
+ * Copyright (c) 2014-present, Facebook, Inc.
  *
- * This source code is licensed under the BSD-style license found in the
- * https://raw.github.com/facebook/regenerator/master/LICENSE file. An
- * additional grant of patent rights can be found in the PATENTS file in
- * the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
 !(function(global) {
@@ -939,7 +936,8 @@ var loader = {
 		var apiKey = _ref.apiKey,
 		    version = _ref.version,
 		    libraries = _ref.libraries,
-		    loadCn = _ref.loadCn;
+		    loadCn = _ref.loadCn,
+		    useBetaRenderer = _ref.useBetaRenderer;
 
 		if (typeof window === 'undefined') {
 			// Do nothing if run from server-side
@@ -984,8 +982,10 @@ var loader = {
 				return encodeURIComponent(key) + '=' + encodeURIComponent(options[key]);
 			}).join('&');
 
-			if (version) {
-				url = url + '&v=' + version;
+			var usingBetaRenderer = version && version === '3.exp' || typeof useBetaRenderer === 'boolean' && useBetaRenderer === true;
+
+			if (usingBetaRenderer || version) {
+				url = url + '&v=' + (usingBetaRenderer ? '3.exp&slippy=true' : version);
 			}
 
 			googleMapScript.setAttribute('src', url);
@@ -1134,7 +1134,10 @@ function bindProp(_ref) {
 	vm.$watch(function () {
 		return watcher(vm[name]);
 	}, function (value, oldValue) {
-		return applier(value, oldValue, setter);
+		if (!identity(value, setValue)) {
+			applier(value, oldValue, setter);
+		}
+		setValue = value;
 	});
 
 	var listener = target.addListener(changeEvent, function () {
@@ -1683,6 +1686,8 @@ var ResizeObserver = { render: function render() {
 		var object = document.createElement('object');
 		this._resizeObject = object;
 		object.setAttribute('style', 'display: block; position: absolute; top: 0; left: 0; height: 100%; width: 100%; overflow: hidden; pointer-events: none; z-index: -1;');
+		object.setAttribute('aria-hidden', 'true');
+		object.setAttribute('tabindex', -1);
 		object.onload = this.addResizeHandlers;
 		object.type = 'text/html';
 		if (isIE) {
@@ -1710,7 +1715,7 @@ function install(Vue) {
 // Plugin
 var plugin$2 = {
 	// eslint-disable-next-line no-undef
-	version: "0.4.2",
+	version: "0.4.4",
 	install: install
 };
 
@@ -1880,6 +1885,7 @@ var Map = { render: function render() {
 			type: Number
 		},
 		zoom: {
+			required: true,
 			type: Number
 		}
 	},
@@ -2246,7 +2252,7 @@ function registerComponents(Vue, prefix) {
 
 var plugin = {
 	// eslint-disable-next-line no-undef
-	version: "0.0.6",
+	version: "0.1.1",
 	install: function install(Vue, options) {
 		var finalOptions = Object.assign({}, {
 			installComponents: true,
@@ -2284,6 +2290,7 @@ exports.Marker = Marker;
 exports.NearbyPlaces = NearbyPlaces;
 exports.PlaceDetails = PlaceDetails;
 exports.UserPosition = UserPosition;
+exports.MapElement = MapElement;
 exports['default'] = plugin;
 
 Object.defineProperty(exports, '__esModule', { value: true });

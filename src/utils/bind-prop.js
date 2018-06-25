@@ -50,7 +50,12 @@ export function bindProp ({
 
 	vm.$watch(
 		() => watcher(vm[name]),
-		(value, oldValue) => applier(value, oldValue, setter)
+		(value, oldValue) => {
+			if (!identity(value, setValue)) {
+				applier(value, oldValue, setter)
+			}
+			setValue = value
+		}
 	)
 
 	const listener = target.addListener(changeEvent, () => {
