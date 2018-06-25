@@ -11,6 +11,8 @@ import NearbyPlaces from './components/NearbyPlaces'
 import PlaceDetails from './components/PlaceDetails'
 import UserPosition from './components/UserPosition'
 
+import MapElement from './mixins/MapElement'
+
 export {
 	Circle,
 	Geocoder,
@@ -19,6 +21,7 @@ export {
 	NearbyPlaces,
 	PlaceDetails,
 	UserPosition,
+	MapElement,
 }
 
 function registerComponents (Vue, prefix) {
