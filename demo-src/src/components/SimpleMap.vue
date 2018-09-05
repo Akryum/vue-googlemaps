@@ -34,7 +34,15 @@
 			<!-- Marker -->
 			<googlemaps-marker
 				title="Paris"
+				:draggable="true"
 				:position="{ lat: 48.8735, lng: 2.2951 }" />
+
+			<!-- Polyline -->
+			<googlemaps-polyline :path="path"
+								 :draggable="true"
+								 :options="options"
+								 @click="polylineClicked"
+								 @path_changed="pathChanged" />
 		</googlemaps-map>
 	</div>
 </template>
@@ -49,6 +57,18 @@ export default {
 				lat: 48.853,
 				lng: 2.298,
 			},
+			path: [
+				{
+					lat: 48.853,
+					lng: 2.298,
+				},
+				{
+					lat: 48.8735,
+					lng: 2.2951,
+				},
+			],
+			options: {
+			},
 			userPosition: null,
 			zoom: 12,
 		}
@@ -58,6 +78,20 @@ export default {
 		...mapActions('layout', [
 			'toggleSideNav',
 		]),
+
+		polylineClicked () {
+			console.log('clicked')
+
+			const options = {
+				strokeOpacity: Math.random(),
+			}
+
+			this.options = options
+		},
+
+		pathChanged (path) {
+			console.log(path)
+		},
 
 		centerOnUser () {
 			if (this.userPosition) {
