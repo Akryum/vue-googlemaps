@@ -39,7 +39,7 @@
 				:request="nearbyRequest"
 				:filter="result => !result.types.includes('locality')"
 			>
-				<template scope="props">
+				<template slot-scope="props">
 					<md-list class="md-double-line">
 						<md-subheader class="md-inset">Nearby places</md-subheader>
 

@@ -45,7 +45,7 @@
 				ref="results"
 				:request="geocoderRequest"
 			>
-				<template scope="props">
+				<template slot-scope="props">
 					<div v-if="!searchLocation" class="tip overlay">
 						<md-icon class="md-size-2x">assistant</md-icon>
 						<div>Click on the map</div>

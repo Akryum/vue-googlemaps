@@ -45,7 +45,7 @@
 				:request="placeDetailsRequest"
 				@results="onResults"
 			>
-				<template scope="props">
+				<template slot-scope="props">
 					<div v-if="!placeId" class="tip overlay">
 						<md-icon class="md-size-2x">assistant</md-icon>
 						<div>Click an icon on the map</div>

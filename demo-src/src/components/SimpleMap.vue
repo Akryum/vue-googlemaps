@@ -39,10 +39,10 @@
 
 			<!-- Polyline -->
 			<googlemaps-polyline :path="path"
-								 :draggable="true"
-								 :options="options"
-								 @click="polylineClicked"
-								 @path_changed="pathChanged" />
+				:draggable="true"
+				:options="options"
+				@click="polylineClicked"
+				@path_changed="pathChanged" />
 		</googlemaps-map>
 	</div>
 </template>
