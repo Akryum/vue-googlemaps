@@ -47,24 +47,24 @@ const loader = {
 			}
 			options['callback'] = 'VueGoogleMapsLoaded'
 
-      const baseUrl = (typeof loadCn === 'boolean' && loadCn === true)
-        ? 'http://maps.google.cn'
-        : 'https://maps.googleapis.com'
+			const baseUrl = (typeof loadCn === 'boolean' && loadCn === true)
+				? 'http://maps.google.cn'
+				: 'https://maps.googleapis.com'
 
-      const urlParams = Object.keys(options)
-        .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(options[key])}`)
-        .join('&')
+			const urlParams = Object.keys(options)
+				.map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(options[key])}`)
+				.join('&')
 
 			let url = `${baseUrl}/maps/api/js?${urlParams}`
 
-      // Override version if they do not want to use the new renderer/base map
-      if (!useNewFeatures) {
-        version = '3.31'
-      }
+			// Override version if they do not want to use the new renderer/base map
+			if (!useNewFeatures) {
+				version = '3.31'
+			}
 
 			if (version) {
-        url = `${url}&v=${version}`
-      }
+				url = `${url}&v=${version}`
+			}
 
 			googleMapScript.setAttribute('src', url)
 			googleMapScript.setAttribute('async', '')

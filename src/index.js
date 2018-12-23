@@ -27,7 +27,7 @@ export {
 	UserPosition,
 	MapElement,
 	Polyline,
-	Polygon
+	Polygon,
 }
 
 function registerComponents (Vue, prefix) {
