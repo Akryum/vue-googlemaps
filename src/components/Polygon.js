@@ -1,12 +1,10 @@
 import MapElement from '../mixins/MapElement'
 
 const boundProps = [
-	'center',
 	'draggable',
 	'editable',
-	'radius',
-	'visible',
 	'options',
+	'paths',
 ]
 
 const redirectedEvents = [
@@ -23,26 +21,18 @@ const redirectedEvents = [
 ]
 
 export default {
-	name: 'GoogleMapsCircle',
+	name: 'GoogleMapsPolygon',
 
 	mixins: [
 		MapElement,
 	],
 
 	props: {
-		center: {
-			type: Object,
-			required: true,
-		},
-		clickable: {
-			type: Boolean,
-			default: true,
-		},
-		draggable: {
+		editable: {
 			type: Boolean,
 			default: false,
 		},
-		editable: {
+		draggable: {
 			type: Boolean,
 			default: false,
 		},
@@ -50,27 +40,19 @@ export default {
 			type: Object,
 			default: () => ({}),
 		},
-		radius: {
-			type: Number,
-			required: true,
-		},
-		visible: {
-			default: true,
-		},
-		zIndex: {
-			type: Number,
+		paths: {
+			type: Array,
 		},
 	},
 
 	watch: {
+		paths: 'updateOptions',
 		options: 'updateOptions',
-		clickable: 'updateOptions',
-		zIndex: 'updateOptions',
 	},
 
 	methods: {
 		updateOptions (options) {
-			this.$_circle && this.$_circle.setOptions(options || this.$props)
+			this.$_polygon && this.$_polygon.setOptions(options || this.$props)
 		},
 	},
 
@@ -82,14 +64,17 @@ export default {
 		const options = Object.assign({}, this.$props)
 		options.map = this.$_map
 
-		this.$_circle = new window.google.maps.Circle(options)
-		this.bindProps(this.$_circle, boundProps)
-		this.redirectEvents(this.$_circle, redirectedEvents)
+		this.$_polygon = new window.google.maps.Polygon(options)
+		this.bindProps(this.$_polygon, boundProps)
+		this.redirectEvents(this.$_polygon, redirectedEvents)
+		this.listen(this.$_polygon, 'drag', () => {
+			this.$emit('path_changed', this.$_polygon.getPath())
+		})
 	},
 
 	beforeDestroy () {
-		if (this.$_circle) {
-			this.$_circle.setMap(null)
+		if (this.$_polygon) {
+			this.$_polygon.setMap(null)
 		}
 	},
 }

@@ -1,12 +1,10 @@
 import MapElement from '../mixins/MapElement'
 
 const boundProps = [
-	'center',
 	'draggable',
 	'editable',
-	'radius',
-	'visible',
 	'options',
+	'path',
 ]
 
 const redirectedEvents = [
@@ -23,26 +21,18 @@ const redirectedEvents = [
 ]
 
 export default {
-	name: 'GoogleMapsCircle',
+	name: 'GoogleMapsPolyline',
 
 	mixins: [
 		MapElement,
 	],
 
 	props: {
-		center: {
-			type: Object,
-			required: true,
-		},
-		clickable: {
-			type: Boolean,
-			default: true,
-		},
-		draggable: {
+		editable: {
 			type: Boolean,
 			default: false,
 		},
-		editable: {
+		draggable: {
 			type: Boolean,
 			default: false,
 		},
@@ -50,27 +40,18 @@ export default {
 			type: Object,
 			default: () => ({}),
 		},
-		radius: {
-			type: Number,
-			required: true,
-		},
-		visible: {
-			default: true,
-		},
-		zIndex: {
-			type: Number,
+		path: {
+			type: Array,
 		},
 	},
 
 	watch: {
 		options: 'updateOptions',
-		clickable: 'updateOptions',
-		zIndex: 'updateOptions',
 	},
 
 	methods: {
 		updateOptions (options) {
-			this.$_circle && this.$_circle.setOptions(options || this.$props)
+			this.$_polyline && this.$_polyline.setOptions(options || this.$props)
 		},
 	},
 
@@ -82,14 +63,17 @@ export default {
 		const options = Object.assign({}, this.$props)
 		options.map = this.$_map
 
-		this.$_circle = new window.google.maps.Circle(options)
-		this.bindProps(this.$_circle, boundProps)
-		this.redirectEvents(this.$_circle, redirectedEvents)
+		this.$_polyline = new window.google.maps.Polyline(options)
+		this.bindProps(this.$_polyline, boundProps)
+		this.redirectEvents(this.$_polyline, redirectedEvents)
+		this.listen(this.$_polyline, 'drag', () => {
+			this.$emit('path_changed', this.$_polyline.getPath())
+		})
 	},
 
 	beforeDestroy () {
-		if (this.$_circle) {
-			this.$_circle.setMap(null)
+		if (this.$_polyline) {
+			this.$_polyline.setMap(null)
 		}
 	},
 }

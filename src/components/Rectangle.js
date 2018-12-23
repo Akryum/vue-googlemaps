@@ -1,10 +1,9 @@
 import MapElement from '../mixins/MapElement'
 
 const boundProps = [
-	'center',
+	'bounds',
 	'draggable',
 	'editable',
-	'radius',
 	'visible',
 	'options',
 ]
@@ -23,14 +22,14 @@ const redirectedEvents = [
 ]
 
 export default {
-	name: 'GoogleMapsCircle',
+	name: 'GoogleMapsRectangle',
 
 	mixins: [
 		MapElement,
 	],
 
 	props: {
-		center: {
+		bounds: {
 			type: Object,
 			required: true,
 		},
@@ -50,10 +49,6 @@ export default {
 			type: Object,
 			default: () => ({}),
 		},
-		radius: {
-			type: Number,
-			required: true,
-		},
 		visible: {
 			default: true,
 		},
@@ -63,6 +58,7 @@ export default {
 	},
 
 	watch: {
+		bounds: 'updateBounds',
 		options: 'updateOptions',
 		clickable: 'updateOptions',
 		zIndex: 'updateOptions',
@@ -70,7 +66,11 @@ export default {
 
 	methods: {
 		updateOptions (options) {
-			this.$_circle && this.$_circle.setOptions(options || this.$props)
+			this.$_rectangle && this.$_rectangle.setOptions(options || this.$props)
+		},
+
+		updateBounds (bounds) {
+			this.$_rectangle && this.$_rectangle.setBounds(bounds)
 		},
 	},
 
@@ -82,14 +82,14 @@ export default {
 		const options = Object.assign({}, this.$props)
 		options.map = this.$_map
 
-		this.$_circle = new window.google.maps.Circle(options)
-		this.bindProps(this.$_circle, boundProps)
-		this.redirectEvents(this.$_circle, redirectedEvents)
+		this.$_rectangle = new window.google.maps.Rectangle(options)
+		this.bindProps(this.$_rectangle, boundProps)
+		this.redirectEvents(this.$_rectangle, redirectedEvents)
 	},
 
 	beforeDestroy () {
-		if (this.$_circle) {
-			this.$_circle.setMap(null)
+		if (this.$_rectangle) {
+			this.$_rectangle.setMap(null)
 		}
 	},
 }
