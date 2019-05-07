@@ -5320,10 +5320,10 @@ void-elements@^2.0.1:
   resolved "https://registry.yarnpkg.com/void-elements/-/void-elements-2.0.1.tgz#c066afb582bb1cb4128d60ea92392e94d5e9dbec"
   integrity sha1-wGavtYK7HLQSjWDqkjkulNXp2+w=
 
-vue-observe-visibility@^0.3.0:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/vue-observe-visibility/-/vue-observe-visibility-0.3.1.tgz#e7cad37893da42858c086196da9acdb0fd85340b"
-  integrity sha512-hrTdlkTiPmjjH+00dIiCsr/bBPNjUljNc9rboeLXMnXUqeom8LKa4l3iLwb3exa9PUUhtp4RrOtsa2eH0NimsQ==
+vue-observe-visibility@^0.4.4:
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/vue-observe-visibility/-/vue-observe-visibility-0.4.4.tgz#cf3e945bf80c1317a1c32bc516d6cfd4dda8f8fd"
+  integrity sha512-2eDYHgL2MJ2wkkNZnus56D0CG8m80BFLuvEcGnD7rQ9jxFogpXMsM9aM5Md+XT8AmYGYCqVfOVBaWFtVvwbpmw==
 
 vue-resize@^0.4.1:
   version "0.4.5"

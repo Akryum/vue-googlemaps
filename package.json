@@ -51,7 +51,7 @@
     "vue": "^2.4.2"
   },
   "dependencies": {
-    "vue-observe-visibility": "^0.3.0",
+    "vue-observe-visibility": "^0.4.4",
     "vue-resize": "^0.4.1"
   }
 }
