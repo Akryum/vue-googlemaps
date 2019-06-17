@@ -1814,6 +1814,18 @@ function redirectMethods(_ref) {
 	}, {});
 }
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 var boundProps$1 = [{
 	name: 'center',
 	watcher: function watcher(value) {
@@ -1845,9 +1857,7 @@ var redirectedMethods = ['panBy', 'panTo', 'panToBounds', 'fitBounds', 'getBound
 
 var redirectedEvents$1 = ['click', 'dblclick', 'drag', 'dragend', 'dragstart', 'mousedown', 'mouseup', 'mousemove', 'mouseout', 'mouseover', 'resize', 'rightclick', 'tilesloaded'];
 
-var Map = { render: function render() {
-		var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('div', { directives: [{ name: "observe-visibility", rawName: "v-observe-visibility", value: _vm.visibilityChanged, expression: "visibilityChanged" }], staticClass: "vue-google-map" }, [_c('div', { ref: "map", staticClass: "map-view" }), _vm._v(" "), _c('div', { staticClass: "hidden-content" }, [_vm._t("default")], 2), _vm._v(" "), _vm._t("visible"), _vm._v(" "), _c('resize-observer', { on: { "notify": _vm.resize } })], 2);
-	}, staticRenderFns: [], _scopeId: 'data-v-3074bd5c',
+var script = {
 	name: 'GoogleMapsMap',
 
 	mixins: [Ready, BoundProps, Events],
@@ -1971,6 +1981,183 @@ var Map = { render: function render() {
 		}
 	})
 };
+
+'use strict';
+
+function normalizeComponent(template, style, script, scopeId, isFunctionalTemplate, moduleIdentifier
+/* server only */
+, shadowMode, createInjector, createInjectorSSR, createInjectorShadow) {
+  if (typeof shadowMode !== 'boolean') {
+    createInjectorSSR = createInjector;
+    createInjector = shadowMode;
+    shadowMode = false;
+  } // Vue.extend constructor export interop.
+
+
+  var options = typeof script === 'function' ? script.options : script; // render functions
+
+  if (template && template.render) {
+    options.render = template.render;
+    options.staticRenderFns = template.staticRenderFns;
+    options._compiled = true; // functional template
+
+    if (isFunctionalTemplate) {
+      options.functional = true;
+    }
+  } // scopedId
+
+
+  if (scopeId) {
+    options._scopeId = scopeId;
+  }
+
+  var hook;
+
+  if (moduleIdentifier) {
+    // server build
+    hook = function hook(context) {
+      // 2.3 injection
+      context = context || // cached call
+      this.$vnode && this.$vnode.ssrContext || // stateful
+      this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext; // functional
+      // 2.2 with runInNewContext: true
+
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__;
+      } // inject component styles
+
+
+      if (style) {
+        style.call(this, createInjectorSSR(context));
+      } // register component module identifier for async chunk inference
+
+
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier);
+      }
+    }; // used by ssr in case component is cached and beforeCreate
+    // never gets called
+
+
+    options._ssrRegister = hook;
+  } else if (style) {
+    hook = shadowMode ? function () {
+      style.call(this, createInjectorShadow(this.$root.$options.shadowRoot));
+    } : function (context) {
+      style.call(this, createInjector(context));
+    };
+  }
+
+  if (hook) {
+    if (options.functional) {
+      // register for functional component in vue file
+      var originalRender = options.render;
+
+      options.render = function renderWithStyleInjection(h, context) {
+        hook.call(context);
+        return originalRender(h, context);
+      };
+    } else {
+      // inject component registration as beforeCreate hook
+      var existing = options.beforeCreate;
+      options.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+    }
+  }
+
+  return script;
+}
+
+var normalizeComponent_1 = normalizeComponent;
+
+'use strict';
+
+var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+function createInjector(context) {
+  return function (id, style) {
+    return addStyle(id, style);
+  };
+}
+var HEAD = document.head || document.getElementsByTagName('head')[0];
+var styles = {};
+
+function addStyle(id, css) {
+  var group = isOldIE ? css.media || 'default' : id;
+  var style = styles[group] || (styles[group] = {
+    ids: new Set(),
+    styles: []
+  });
+
+  if (!style.ids.has(id)) {
+    style.ids.add(id);
+    var code = css.source;
+
+    if (css.map) {
+      // https://developer.chrome.com/devtools/docs/javascript-debugging
+      // this makes source maps inside style tags work properly in Chrome
+      code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
+
+      code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
+    }
+
+    if (!style.element) {
+      style.element = document.createElement('style');
+      style.element.type = 'text/css';
+      if (css.media) style.element.setAttribute('media', css.media);
+      HEAD.appendChild(style.element);
+    }
+
+    if ('styleSheet' in style.element) {
+      style.styles.push(code);
+      style.element.styleSheet.cssText = style.styles.filter(Boolean).join('\n');
+    } else {
+      var index = style.ids.size - 1;
+      var textNode = document.createTextNode(code);
+      var nodes = style.element.childNodes;
+      if (nodes[index]) style.element.removeChild(nodes[index]);
+      if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
+    }
+  }
+}
+
+var browser = createInjector;
+
+/* script */
+var __vue_script__ = script;
+
+/* template */
+var __vue_render__ = function __vue_render__() {
+  var _vm = this;
+  var _h = _vm.$createElement;
+  var _c = _vm._self._c || _h;
+  return _c("div", {
+    directives: [{
+      name: "observe-visibility",
+      rawName: "v-observe-visibility",
+      value: _vm.visibilityChanged,
+      expression: "visibilityChanged"
+    }],
+    staticClass: "vue-google-map"
+  }, [_c("div", { ref: "map", staticClass: "map-view" }), _vm._v(" "), _c("div", { staticClass: "hidden-content" }, [_vm._t("default")], 2), _vm._v(" "), _vm._t("visible"), _vm._v(" "), _c("resize-observer", { on: { notify: _vm.resize } })], 2);
+};
+var __vue_staticRenderFns__ = [];
+__vue_render__._withStripped = true;
+
+/* style */
+var __vue_inject_styles__ = function __vue_inject_styles__(inject) {
+  if (!inject) return;
+  inject("data-v-24c407d0_0", { source: "@import '../../node_modules/vue-resize/dist/vue-resize.css';\n", map: { "version": 3, "sources": ["/Users/alexanderlindkjaer/Wecode/vue-googlemaps/src/components/Map.vue"], "names": [], "mappings": "AAwMA,2DAAA", "file": "Map.vue", "sourcesContent": ["<template>\n\t<div class=\"vue-google-map\" v-observe-visibility=\"visibilityChanged\">\n\t\t<div ref=\"map\" class=\"map-view\"></div>\n\t\t<div class=\"hidden-content\">\n\t\t\t<slot></slot>\n\t\t</div>\n\t\t<slot name=\"visible\"></slot>\n\t\t<resize-observer @notify=\"resize\" />\n\t</div>\n</template>\n\n<script>\nimport { ResizeObserver } from 'vue-resize'\nimport { ObserveVisibility } from 'vue-observe-visibility'\nimport Ready from '../mixins/Ready'\nimport BoundProps from '../mixins/BoundProps'\nimport Events from '../mixins/Events'\nimport { autoCall } from '../utils/misc'\nimport { redirectMethods } from '../utils/redirect-methods'\n\nconst boundProps = [\n\t{\n\t\tname: 'center',\n\t\twatcher: value => ({\n\t\t\tlat: autoCall(value.lat),\n\t\t\tlng: autoCall(value.lng),\n\t\t}),\n\t\tidentity: (a, b) => {\n\t\t\tif (a && b) {\n\t\t\t\tif (typeof a.equals !== 'function') {\n\t\t\t\t\ta = new window.google.maps.LatLng(a)\n\t\t\t\t}\n\t\t\t\tif (typeof b.equals !== 'function') {\n\t\t\t\t\tb = new window.google.maps.LatLng(b)\n\t\t\t\t}\n\t\t\t\treturn a.equals(b)\n\t\t\t}\n\t\t},\n\t\tretriever: (value) => ({\n\t\t\tlat: value.lat(),\n\t\t\tlng: value.lng(),\n\t\t}),\n\t},\n\t'heading',\n\t'mapTypeId',\n\t'tilt',\n\t'zoom',\n\t'options',\n]\n\nconst redirectedMethods = [\n\t'panBy',\n\t'panTo',\n\t'panToBounds',\n\t'fitBounds',\n\t'getBounds',\n]\n\nconst redirectedEvents = [\n\t'click',\n\t'dblclick',\n\t'drag',\n\t'dragend',\n\t'dragstart',\n\t'mousedown',\n\t'mouseup',\n\t'mousemove',\n\t'mouseout',\n\t'mouseover',\n\t'resize',\n\t'rightclick',\n\t'tilesloaded',\n]\n\nexport default {\n\tname: 'GoogleMapsMap',\n\n\tmixins: [\n\t\tReady,\n\t\tBoundProps,\n\t\tEvents,\n\t],\n\n\tcomponents: {\n\t\tResizeObserver,\n\t},\n\n\tdirectives: {\n\t\tObserveVisibility,\n\t},\n\n\tprops: {\n\t\tcenter: {\n\t\t\trequired: true,\n\t\t\ttype: Object,\n\t\t},\n\t\theading: {\n\t\t\ttype: Number,\n\t\t},\n\t\tmapTypeId: {\n\t\t\ttype: String,\n\t\t},\n\t\toptions: {\n\t\t\ttype: Object,\n\t\t\tdefault: () => ({}),\n\t\t},\n\t\ttilt: {\n\t\t\ttype: Number,\n\t\t},\n\t\tzoom: {\n\t\t\trequired: true,\n\t\t\ttype: Number,\n\t\t},\n\t},\n\n\tbeforeCreate () {\n\t\tthis.$_mapPromises = []\n\t},\n\n\tgoogleMapsReady () {\n\t\tconst element = this.$refs.map\n\n\t\tconst options = {\n\t\t\tcenter: this.center,\n\t\t\theading: this.heading,\n\t\t\tmapTypeId: this.mapTypeId,\n\t\t\ttilt: this.tilt,\n\t\t\tzoom: this.zoom,\n\t\t\t...this.options,\n\t\t}\n\n\t\tthis.$_map = new window.google.maps.Map(element, options)\n\n\t\tthis.bindProps(this.$_map, boundProps)\n\n\t\tthis.listen(this.$_map, 'bounds_changed', () => {\n\t\t\tthis.$emit('update:bounds', this.$_map.getBounds())\n\t\t})\n\n\t\tthis.listen(this.$_map, 'idle', () => {\n\t\t\tthis.$emit('idle', this)\n\t\t\tthis.lastCenter = this.$_map.getCenter()\n\t\t})\n\n\t\tthis.lastCenter = this.$_map.getCenter()\n\n\t\tthis.redirectEvents(this.$_map, redirectedEvents)\n\n\t\t// Code that awaits `$_getMap()`\n\t\tthis.$_mapPromises.forEach(resolve => resolve(this.$_map))\n\t},\n\n\twatch: {\n\t\toptions: {\n\t\t\thandler: 'updateOptions',\n\t\t\tdeep: true,\n\t\t},\n\t},\n\n\tmethods: {\n\t\t...redirectMethods({\n\t\t\ttarget () {\n\t\t\t\treturn this.$_map\n\t\t\t},\n\t\t\tnames: redirectedMethods,\n\t\t}),\n\n\t\tresize (preserveCenter = true) {\n\t\t\tif (this.$_map) {\n\t\t\t\t// let center\n\t\t\t\t// preserveCenter && (center = this.$_map.getCenter())\n\t\t\t\twindow.google.maps.event.trigger(this.$_map, 'resize')\n\t\t\t\tpreserveCenter && this.$_map.setCenter(this.lastCenter)\n\t\t\t}\n\t\t},\n\n\t\tvisibilityChanged (isVisible) {\n\t\t\tif (isVisible) {\n\t\t\t\tthis.$nextTick(this.resize)\n\t\t\t}\n\t\t},\n\n\t\t$_getMap () {\n\t\t\tif (this.$_map) {\n\t\t\t\treturn Promise.resolve(this.$_map)\n\t\t\t} else {\n\t\t\t\treturn new Promise(resolve => {\n\t\t\t\t\tthis.$_mapPromises.push(resolve)\n\t\t\t\t})\n\t\t\t}\n\t\t},\n\n\t\tupdateOptions (options) {\n\t\t\tthis.$_map && this.$_map.setOptions(options || this.$props)\n\t\t},\n\t},\n}\n</script>\n\n<style lang=\"stylus\">\n@import '../../node_modules/vue-resize/dist/vue-resize.css';\n</style>\n\n<style lang=\"stylus\" scoped>\n.vue-google-map {\n\tposition: relative;\n\n\t.map-view {\n\t\tleft: 0;\n\t\tright: 0;\n\t\ttop: 0;\n\t\tbottom: 0;\n\t\tposition: absolute;\n\t}\n\n\t.hidden-content {\n\t\tdisplay: none;\n\t}\n}\n</style>\n"] }, media: undefined }), inject("data-v-24c407d0_1", { source: ".vue-google-map[data-v-24c407d0] {\n  position: relative;\n}\n.vue-google-map .map-view[data-v-24c407d0] {\n  left: 0;\n  right: 0;\n  top: 0;\n  bottom: 0;\n  position: absolute;\n}\n.vue-google-map .hidden-content[data-v-24c407d0] {\n  display: none;\n}\n", map: { "version": 3, "sources": ["/Users/alexanderlindkjaer/Wecode/vue-googlemaps/src/components/Map.vue", "Map.vue"], "names": [], "mappings": "AA4MA;EACA,kBAAA;AC3MA;AD6MA;EACA,OAAA;EACA,QAAA;EACA,MAAA;EACA,SAAA;EACA,kBAAA;AC3MA;AD8MA;EACA,aAAA;AC5MA", "file": "Map.vue", "sourcesContent": ["<template>\n\t<div class=\"vue-google-map\" v-observe-visibility=\"visibilityChanged\">\n\t\t<div ref=\"map\" class=\"map-view\"></div>\n\t\t<div class=\"hidden-content\">\n\t\t\t<slot></slot>\n\t\t</div>\n\t\t<slot name=\"visible\"></slot>\n\t\t<resize-observer @notify=\"resize\" />\n\t</div>\n</template>\n\n<script>\nimport { ResizeObserver } from 'vue-resize'\nimport { ObserveVisibility } from 'vue-observe-visibility'\nimport Ready from '../mixins/Ready'\nimport BoundProps from '../mixins/BoundProps'\nimport Events from '../mixins/Events'\nimport { autoCall } from '../utils/misc'\nimport { redirectMethods } from '../utils/redirect-methods'\n\nconst boundProps = [\n\t{\n\t\tname: 'center',\n\t\twatcher: value => ({\n\t\t\tlat: autoCall(value.lat),\n\t\t\tlng: autoCall(value.lng),\n\t\t}),\n\t\tidentity: (a, b) => {\n\t\t\tif (a && b) {\n\t\t\t\tif (typeof a.equals !== 'function') {\n\t\t\t\t\ta = new window.google.maps.LatLng(a)\n\t\t\t\t}\n\t\t\t\tif (typeof b.equals !== 'function') {\n\t\t\t\t\tb = new window.google.maps.LatLng(b)\n\t\t\t\t}\n\t\t\t\treturn a.equals(b)\n\t\t\t}\n\t\t},\n\t\tretriever: (value) => ({\n\t\t\tlat: value.lat(),\n\t\t\tlng: value.lng(),\n\t\t}),\n\t},\n\t'heading',\n\t'mapTypeId',\n\t'tilt',\n\t'zoom',\n\t'options',\n]\n\nconst redirectedMethods = [\n\t'panBy',\n\t'panTo',\n\t'panToBounds',\n\t'fitBounds',\n\t'getBounds',\n]\n\nconst redirectedEvents = [\n\t'click',\n\t'dblclick',\n\t'drag',\n\t'dragend',\n\t'dragstart',\n\t'mousedown',\n\t'mouseup',\n\t'mousemove',\n\t'mouseout',\n\t'mouseover',\n\t'resize',\n\t'rightclick',\n\t'tilesloaded',\n]\n\nexport default {\n\tname: 'GoogleMapsMap',\n\n\tmixins: [\n\t\tReady,\n\t\tBoundProps,\n\t\tEvents,\n\t],\n\n\tcomponents: {\n\t\tResizeObserver,\n\t},\n\n\tdirectives: {\n\t\tObserveVisibility,\n\t},\n\n\tprops: {\n\t\tcenter: {\n\t\t\trequired: true,\n\t\t\ttype: Object,\n\t\t},\n\t\theading: {\n\t\t\ttype: Number,\n\t\t},\n\t\tmapTypeId: {\n\t\t\ttype: String,\n\t\t},\n\t\toptions: {\n\t\t\ttype: Object,\n\t\t\tdefault: () => ({}),\n\t\t},\n\t\ttilt: {\n\t\t\ttype: Number,\n\t\t},\n\t\tzoom: {\n\t\t\trequired: true,\n\t\t\ttype: Number,\n\t\t},\n\t},\n\n\tbeforeCreate () {\n\t\tthis.$_mapPromises = []\n\t},\n\n\tgoogleMapsReady () {\n\t\tconst element = this.$refs.map\n\n\t\tconst options = {\n\t\t\tcenter: this.center,\n\t\t\theading: this.heading,\n\t\t\tmapTypeId: this.mapTypeId,\n\t\t\ttilt: this.tilt,\n\t\t\tzoom: this.zoom,\n\t\t\t...this.options,\n\t\t}\n\n\t\tthis.$_map = new window.google.maps.Map(element, options)\n\n\t\tthis.bindProps(this.$_map, boundProps)\n\n\t\tthis.listen(this.$_map, 'bounds_changed', () => {\n\t\t\tthis.$emit('update:bounds', this.$_map.getBounds())\n\t\t})\n\n\t\tthis.listen(this.$_map, 'idle', () => {\n\t\t\tthis.$emit('idle', this)\n\t\t\tthis.lastCenter = this.$_map.getCenter()\n\t\t})\n\n\t\tthis.lastCenter = this.$_map.getCenter()\n\n\t\tthis.redirectEvents(this.$_map, redirectedEvents)\n\n\t\t// Code that awaits `$_getMap()`\n\t\tthis.$_mapPromises.forEach(resolve => resolve(this.$_map))\n\t},\n\n\twatch: {\n\t\toptions: {\n\t\t\thandler: 'updateOptions',\n\t\t\tdeep: true,\n\t\t},\n\t},\n\n\tmethods: {\n\t\t...redirectMethods({\n\t\t\ttarget () {\n\t\t\t\treturn this.$_map\n\t\t\t},\n\t\t\tnames: redirectedMethods,\n\t\t}),\n\n\t\tresize (preserveCenter = true) {\n\t\t\tif (this.$_map) {\n\t\t\t\t// let center\n\t\t\t\t// preserveCenter && (center = this.$_map.getCenter())\n\t\t\t\twindow.google.maps.event.trigger(this.$_map, 'resize')\n\t\t\t\tpreserveCenter && this.$_map.setCenter(this.lastCenter)\n\t\t\t}\n\t\t},\n\n\t\tvisibilityChanged (isVisible) {\n\t\t\tif (isVisible) {\n\t\t\t\tthis.$nextTick(this.resize)\n\t\t\t}\n\t\t},\n\n\t\t$_getMap () {\n\t\t\tif (this.$_map) {\n\t\t\t\treturn Promise.resolve(this.$_map)\n\t\t\t} else {\n\t\t\t\treturn new Promise(resolve => {\n\t\t\t\t\tthis.$_mapPromises.push(resolve)\n\t\t\t\t})\n\t\t\t}\n\t\t},\n\n\t\tupdateOptions (options) {\n\t\t\tthis.$_map && this.$_map.setOptions(options || this.$props)\n\t\t},\n\t},\n}\n</script>\n\n<style lang=\"stylus\">\n@import '../../node_modules/vue-resize/dist/vue-resize.css';\n</style>\n\n<style lang=\"stylus\" scoped>\n.vue-google-map {\n\tposition: relative;\n\n\t.map-view {\n\t\tleft: 0;\n\t\tright: 0;\n\t\ttop: 0;\n\t\tbottom: 0;\n\t\tposition: absolute;\n\t}\n\n\t.hidden-content {\n\t\tdisplay: none;\n\t}\n}\n</style>\n", ".vue-google-map {\n  position: relative;\n}\n.vue-google-map .map-view {\n  left: 0;\n  right: 0;\n  top: 0;\n  bottom: 0;\n  position: absolute;\n}\n.vue-google-map .hidden-content {\n  display: none;\n}\n"] }, media: undefined });
+};
+/* scoped */
+var __vue_scope_id__ = "data-v-24c407d0";
+/* module identifier */
+var __vue_module_identifier__ = undefined;
+/* functional template */
+var __vue_is_functional_template__ = false;
+/* component normalizer */
+/* style inject */
+/* style inject SSR */
+
+var Map = normalizeComponent_1({ render: __vue_render__, staticRenderFns: __vue_staticRenderFns__ }, __vue_inject_styles__, __vue_script__, __vue_scope_id__, __vue_is_functional_template__, __vue_module_identifier__, browser, undefined);
 
 var boundProps$2 = ['animation', 'clickable', 'cursor', 'draggable', 'icon', 'label', 'opacity', 'place', 'position', 'shape', 'title', 'visible', 'zIndex'];
 
@@ -2460,7 +2647,7 @@ function registerComponents(Vue, prefix) {
 
 var plugin = {
 	// eslint-disable-next-line no-undef
-	version: "0.1.2",
+	version: "0.1.3",
 	install: function install(Vue, options) {
 		var finalOptions = Object.assign({}, {
 			installComponents: true,
