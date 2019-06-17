@@ -2,6 +2,35 @@
 
 All credit to original creators.
 
+Forked project and added Direction component for showing a route with several waypoints.
+
+directionRequest example:
+
+```
+{
+    origin: 'Dronning Louises Bro, 1371 København',
+    destination: 'Nørre Voldgade 3, 1358 København',
+    travelMode: 'DRIVING',
+    waypoints: [
+        {
+            location: 'Øster Farimagsgade 17, 1307 København',
+            stopover: true,
+        },
+        {
+            location: 'Statens Naturhistoriske Museum, Gothersgade 130, 1153 København',
+            stopover: true,
+        },
+        {
+            location: 'Nørre Farimagsgade 53, 1364 København',
+            stopover: true,
+        },
+    ],
+}
+```
+
+API ref for directions api
+https://developers.google.com/maps/documentation/javascript/directions
+
 ## Table of Contents
 
 - [Installation](#installation)

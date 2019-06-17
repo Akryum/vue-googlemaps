@@ -17,9 +17,9 @@ export default {
 			main: true,
 			browser: true,
 		}),
-        cjs({
-            exclude: 'src/**',
-        }),
+		cjs({
+			exclude: 'src/**',
+		}),
 		vue({
 			css (style) {
 				fs.writeFileSync('dist/vue-googlemaps.css', new CleanCSS().minify(style).styles)

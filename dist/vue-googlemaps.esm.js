@@ -2068,6 +2068,7 @@ function normalizeComponent(template, style, script, scopeId, isFunctionalTempla
 }
 
 var normalizeComponent_1 = normalizeComponent;
+//# sourceMappingURL=normalize-component.js.map
 
 'use strict';
 
@@ -2120,6 +2121,7 @@ function addStyle(id, css) {
 }
 
 var browser = createInjector;
+//# sourceMappingURL=browser.js.map
 
 /* script */
 var __vue_script__ = script;
@@ -2154,9 +2156,6 @@ var __vue_module_identifier__ = undefined;
 /* functional template */
 var __vue_is_functional_template__ = false;
 /* component normalizer */
-/* style inject */
-/* style inject SSR */
-
 var Map = normalizeComponent_1({ render: __vue_render__, staticRenderFns: __vue_staticRenderFns__ }, __vue_inject_styles__, __vue_script__, __vue_scope_id__, __vue_is_functional_template__, __vue_module_identifier__, browser, undefined);
 
 var boundProps$2 = ['animation', 'clickable', 'cursor', 'draggable', 'icon', 'label', 'opacity', 'place', 'position', 'shape', 'title', 'visible', 'zIndex'];
@@ -2632,6 +2631,103 @@ var Polygon = {
 	}
 };
 
+var Direction = {
+	name: 'GoogleMapsDirections',
+
+	mixins: [Service],
+
+	props: {
+		origin: {
+			type: String
+		},
+		destination: {
+			type: String
+		},
+		travelMode: {
+			type: String,
+			default: 'DRIVING'
+		},
+		waypoints: {
+			type: Array
+		},
+		optimizeWaypoints: {
+			type: Boolean,
+			default: false
+		}
+	},
+
+	methods: {
+		createServices: function createServices() {
+			this.$_directionService = new window.google.maps.DirectionsService();
+		},
+		update: function update() {
+			var _this = this;
+
+			this.loading = true;
+
+			if (!this.request || !this.$_directionService) return;
+
+			this.$_directionService.route(this.request, function (results, status) {
+				_this.setResults(results, status);
+				_this.loading = false;
+			});
+		}
+	}
+};
+
+var DrawDirection = {
+	name: 'GoogleMapsPolygon',
+
+	mixins: [MapElement],
+
+	props: {
+		draggable: {
+			type: Boolean,
+			default: false
+		},
+		options: {
+			type: Object,
+			default: function _default() {
+				return {};
+			}
+		},
+		suppressMarkers: {
+			type: Boolean,
+			default: false
+		},
+		directionResult: {
+			type: Object,
+			required: true
+		}
+	},
+
+	watch: {
+		paths: 'updateOptions',
+		options: 'updateOptions'
+	},
+
+	methods: {
+		updateOptions: function updateOptions(options) {
+			this.$_direction && this.$_direction.setOptions(options || this.$props);
+		}
+	},
+
+	render: function render(h) {
+		return '';
+	},
+	googleMapsReady: function googleMapsReady() {
+		var options = Object.assign({}, this.$props);
+		options.map = this.$_map;
+
+		this.$_direction = new window.google.maps.DirectionsRenderer(options).setDirections(this.directionResult);
+	},
+	beforeDestroy: function beforeDestroy() {
+		if (this.$_direction) {
+			this.$_direction.setMap(null);
+		}
+	}
+};
+
 function registerComponents(Vue, prefix) {
 	Vue.component(prefix + 'circle', Circle);
 	Vue.component(prefix + 'rectangle', Rectangle);
@@ -2643,6 +2739,8 @@ function registerComponents(Vue, prefix) {
 	Vue.component(prefix + 'user-position', UserPosition);
 	Vue.component(prefix + 'polyline', Polyline);
 	Vue.component(prefix + 'polygon', Polygon);
+	Vue.component(prefix + 'direction', Direction);
+	Vue.component(prefix + 'direction-draw', DrawDirection);
 }
 
 var plugin = {
@@ -2667,7 +2765,6 @@ var plugin = {
 	}
 };
 
-// Auto-install
 var GlobalVue = null;
 if (typeof window !== 'undefined') {
 	GlobalVue = window.Vue;
@@ -2678,5 +2775,5 @@ if (GlobalVue) {
 	GlobalVue.use(plugin);
 }
 
-export { Circle, Rectangle, Geocoder, Map, Marker, NearbyPlaces, PlaceDetails, UserPosition, MapElement, Polyline, Polygon };
+export { Circle, Rectangle, Geocoder, Map, Marker, NearbyPlaces, PlaceDetails, UserPosition, MapElement, Polyline, Polygon, Direction, DrawDirection };
 export default plugin;
