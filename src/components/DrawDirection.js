@@ -53,6 +53,12 @@ export default {
 	watch: {
 		paths: 'updateOptions',
 		options: 'updateOptions',
+		directionResult: {
+			handler (value) {
+				value && this.rerender()
+			},
+			deep: true,
+		},
 	},
 
 	methods: {
@@ -76,12 +82,15 @@ export default {
 			}
 		},
 
-		setInfoWindow () {
+		setInfoWindow (update = false) {
 			const step = 1
 			const response = this.directionResult
 			const travelInfo = this.calcTravelInfo()
 
-			this.$_infoWindow = new window.google.maps.InfoWindow()
+			if (!update) {
+				this.$_infoWindow = new window.google.maps.InfoWindow()
+			}
+
 			this.$_infoWindow.setContent('<b>' + travelInfo.distance + '</b> km <br><b>' + travelInfo.time + '</b>')
 			this.$_infoWindow.setPosition(response.routes[0].legs[0].steps[step].end_location)
 			this.$_infoWindow.open(this.$_map)
@@ -100,6 +109,19 @@ export default {
 			// put sDisplay on to display seconds - and a comma to minutes word
 			return hDisplay + mDisplay
 		},
+
+		rerender () {
+			const options = Object.assign({}, this.$props)
+			options.map = this.$_map
+
+			// draw directions
+			this.$_direction = this.$_direction_render.setDirections(this.directionResult)
+
+			// draw distance
+			if (this.drawDistanceWindow) {
+				this.setInfoWindow(true)
+			}
+		},
 	},
 
 	render (h) {
@@ -111,7 +133,8 @@ export default {
 		options.map = this.$_map
 
 		// draw directions
-		this.$_direction = new window.google.maps.DirectionsRenderer(options).setDirections(this.directionResult)
+		this.$_direction_render = new window.google.maps.DirectionsRenderer(options)
+		this.$_direction = this.$_direction_render.setDirections(this.directionResult)
 
 		// draw distance
 		if (this.drawDistanceWindow) {
@@ -122,6 +145,9 @@ export default {
 	beforeDestroy () {
 		if (this.$_direction) {
 			this.$_direction.setMap(null)
+		}
+		if (this.$_direction_render) {
+			this.$_direction_render.setMap(null)
 		}
 		if (this.$_infoWindow) {
 			this.$_infoWindow.setMap(null)

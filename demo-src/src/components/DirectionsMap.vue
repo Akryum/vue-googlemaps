@@ -26,14 +26,12 @@
                 class="map"
                 :center.sync="center"
                 :zoom.sync="zoom"
+                @click="mapClick()"
         >
 
             <googlemaps-direction
                     class="results-pane"
                     ref="results"
-                    origin="Peter Bangs Vej 5B, 2000 Frederiksberg"
-                    destination="Gammeltoftsgade 18, st. th, 1355 København"
-                    :optimizeWaypoints="true"
                     :request="directionRequest"
                     v-on:directionResult="newDirectionResult"
             >
@@ -58,16 +56,6 @@
     				lat: 55.689454,
     				lng: 12.574299,
     			},
-    			path: [
-    				{
-    					lat: 55.689454,
-    					lng: 12.574299,
-    				},
-    				{
-    					lat: 55.674338,
-    					lng: 12.564827,
-    				},
-    			],
     			options: {},
     			userPosition: null,
     			zoom: 12,
@@ -130,9 +118,32 @@
     			}
     		},
 
-            newDirectionResult(result) {
+    		newDirectionResult (result) {
+    			// handle result
+    		},
 
-            }
+    		mapClick () {
+    			this.directionRequest = {
+    				origin: 'Dronning Louises Bro, 1371 København',
+    				destination: 'Nørre Voldgade 3, 1358 København',
+    				travelMode: 'DRIVING',
+    				optimizeWaypoints: false,
+    				waypoints: [
+    					{
+    						location: 'Øster Farimagsgade 17, 1307 København',
+    						stopover: true,
+    					},
+    					{
+    						location: 'Statens Naturhistoriske Museum, Gothersgade 130, 1153 København',
+    						stopover: true,
+    					},
+    					{
+    						location: 'Nørre Farimagsgade 53, 1364 København',
+    						stopover: true,
+    					},
+    				],
+    			}
+    		},
     	},
     }
 </script>
