@@ -2715,7 +2715,14 @@ var DrawDirection = {
 
 	watch: {
 		paths: 'updateOptions',
-		options: 'updateOptions'
+		options: 'updateOptions',
+		directionResult: {
+			handler: function handler(value) {
+				value && this.rerender();
+			},
+
+			deep: true
+		}
 	},
 
 	methods: {
@@ -2738,11 +2745,16 @@ var DrawDirection = {
 			};
 		},
 		setInfoWindow: function setInfoWindow() {
+			var update = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
 			var step = 1;
 			var response = this.directionResult;
 			var travelInfo = this.calcTravelInfo();
 
-			this.$_infoWindow = new window.google.maps.InfoWindow();
+			if (!update) {
+				this.$_infoWindow = new window.google.maps.InfoWindow();
+			}
+
 			this.$_infoWindow.setContent('<b>' + travelInfo.distance + '</b> km <br><b>' + travelInfo.time + '</b>');
 			this.$_infoWindow.setPosition(response.routes[0].legs[0].steps[step].end_location);
 			this.$_infoWindow.open(this.$_map);
@@ -2757,6 +2769,18 @@ var DrawDirection = {
 
 			// put sDisplay on to display seconds - and a comma to minutes word
 			return hDisplay + mDisplay;
+		},
+		rerender: function rerender() {
+			var options = Object.assign({}, this.$props);
+			options.map = this.$_map;
+
+			// draw directions
+			this.$_direction = this.$_direction_render.setDirections(this.directionResult);
+
+			// draw distance
+			if (this.drawDistanceWindow) {
+				this.setInfoWindow(true);
+			}
 		}
 	},
 
@@ -2768,7 +2792,8 @@ var DrawDirection = {
 		options.map = this.$_map;
 
 		// draw directions
-		this.$_direction = new window.google.maps.DirectionsRenderer(options).setDirections(this.directionResult);
+		this.$_direction_render = new window.google.maps.DirectionsRenderer(options);
+		this.$_direction = this.$_direction_render.setDirections(this.directionResult);
 
 		// draw distance
 		if (this.drawDistanceWindow) {
@@ -2778,6 +2803,9 @@ var DrawDirection = {
 	beforeDestroy: function beforeDestroy() {
 		if (this.$_direction) {
 			this.$_direction.setMap(null);
+		}
+		if (this.$_direction_render) {
+			this.$_direction_render.setMap(null);
 		}
 		if (this.$_infoWindow) {
 			this.$_infoWindow.setMap(null);
