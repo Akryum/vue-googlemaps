@@ -92,8 +92,24 @@ export default {
 			}
 
 			this.$_infoWindow.setContent('<b>' + travelInfo.distance + '</b> km <br><b>' + travelInfo.time + '</b>')
-			this.$_infoWindow.setPosition(response.routes[0].legs[0].steps[step].end_location)
+			// this.$_infoWindow.setPosition(response.routes[0].legs[0].steps[step].end_location)
+			this.$_infoWindow.setPosition(response.routes[0].legs[this.maxLegDistance()].steps[step].end_location)
 			this.$_infoWindow.open(this.$_map)
+		},
+
+		maxLegDistance () {
+			let legIndex = 0
+			let distance = 0
+
+			this.directionResult.routes[0].legs.forEach((leg, index) => {
+				const legDistance = leg.distance.value
+				if (legDistance > distance) {
+					legIndex = index
+					distance = legDistance
+				}
+			})
+
+			return legIndex
 		},
 
 		secondsToHms (d) {

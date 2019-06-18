@@ -124,8 +124,8 @@
 
     		mapClick () {
     			this.directionRequest = {
-    				origin: 'Dronning Louises Bro, 1371 København',
-    				destination: 'Nørre Voldgade 3, 1358 København',
+    				origin: 'Baldersgade 6, 2200 København',
+    				destination: {lat: 55.698180, lng: 12.543964},
     				travelMode: 'DRIVING',
     				optimizeWaypoints: false,
     				waypoints: [
@@ -139,6 +139,14 @@
     					},
     					{
     						location: 'Nørre Farimagsgade 53, 1364 København',
+    						stopover: true,
+    					},
+    					{
+    						location: 'Brøndbyøstervej 101, 2605 Brøndbyvester',
+    						stopover: true,
+    					},
+    					{
+    						location: 'Nørre Voldgade 3, 1358 København',
     						stopover: true,
     					},
     				],

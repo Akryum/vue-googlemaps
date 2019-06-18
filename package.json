@@ -45,7 +45,8 @@
     "rollup-plugin-vue": "^5.0.0",
     "stylus": "^0.54.5",
     "uglify-es": "^3.0.28",
-    "vue-template-compiler": "^2.4.4"
+    "vue-template-compiler": "^2.4.4",
+    "vue": "^2.3.0"
   },
   "peerDependencies": {
     "vue": "^2.4.2"

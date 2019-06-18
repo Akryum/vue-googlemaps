@@ -2756,8 +2756,23 @@ var DrawDirection = {
 			}
 
 			this.$_infoWindow.setContent('<b>' + travelInfo.distance + '</b> km <br><b>' + travelInfo.time + '</b>');
-			this.$_infoWindow.setPosition(response.routes[0].legs[0].steps[step].end_location);
+			// this.$_infoWindow.setPosition(response.routes[0].legs[0].steps[step].end_location)
+			this.$_infoWindow.setPosition(response.routes[0].legs[this.maxLegDistance()].steps[step].end_location);
 			this.$_infoWindow.open(this.$_map);
+		},
+		maxLegDistance: function maxLegDistance() {
+			var legIndex = 0;
+			var distance = 0;
+
+			this.directionResult.routes[0].legs.forEach(function (leg, index) {
+				var legDistance = leg.distance.value;
+				if (legDistance > distance) {
+					legIndex = index;
+					distance = legDistance;
+				}
+			});
+
+			return legIndex;
 		},
 		secondsToHms: function secondsToHms(d) {
 			d = Number(d);
