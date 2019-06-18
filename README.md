@@ -30,6 +30,7 @@ directionRequest example:
 
 API ref for directions api
 https://developers.google.com/maps/documentation/javascript/directions
+https://developers.google.com/maps/documentation/javascript/reference/3.35/directions
 
 ## Table of Contents
 
