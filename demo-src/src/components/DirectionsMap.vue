@@ -35,6 +35,7 @@
                     destination="Gammeltoftsgade 18, st. th, 1355 København"
                     :optimizeWaypoints="true"
                     :request="directionRequest"
+                    v-on:directionResult="newDirectionResult"
             >
 
                 <template slot-scope="props" v-if="props.results">
@@ -128,6 +129,10 @@
     				],
     			}
     		},
+
+            newDirectionResult(result) {
+
+            }
     	},
     }
 </script>

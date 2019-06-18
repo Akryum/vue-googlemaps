@@ -45,6 +45,7 @@ export default {
 
 			this.$_directionService.route(this.request, (results, status) => {
 				this.setResults(results, status)
+				this.$emit('directionResult', results)
 				this.loading = false
 			})
 		},

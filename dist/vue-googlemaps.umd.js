@@ -1416,7 +1416,7 @@ var MapElement = {
 
 var boundProps = ['center', 'draggable', 'editable', 'radius', 'visible', 'options'];
 
-var redirectedEvents$1 = ['click', 'rightclick', 'dblclick', 'drag', 'dragstart', 'dragend', 'mouseup', 'mousedown', 'mouseover', 'mouseout'];
+var redirectedEvents = ['click', 'rightclick', 'dblclick', 'drag', 'dragstart', 'dragend', 'mouseup', 'mousedown', 'mouseover', 'mouseout'];
 
 var Circle = {
 	name: 'GoogleMapsCircle',
@@ -1479,7 +1479,7 @@ var Circle = {
 
 		this.$_circle = new window.google.maps.Circle(options);
 		this.bindProps(this.$_circle, boundProps);
-		this.redirectEvents(this.$_circle, redirectedEvents$1);
+		this.redirectEvents(this.$_circle, redirectedEvents);
 	},
 	beforeDestroy: function beforeDestroy() {
 		if (this.$_circle) {
@@ -1861,7 +1861,7 @@ var boundProps$1 = [{
 
 var redirectedMethods = ['panBy', 'panTo', 'panToBounds', 'fitBounds', 'getBounds'];
 
-var redirectedEvents$2 = ['click', 'dblclick', 'drag', 'dragend', 'dragstart', 'mousedown', 'mouseup', 'mousemove', 'mouseout', 'mouseover', 'resize', 'rightclick', 'tilesloaded'];
+var redirectedEvents$1 = ['click', 'dblclick', 'drag', 'dragend', 'dragstart', 'mousedown', 'mouseup', 'mousemove', 'mouseout', 'mouseover', 'resize', 'rightclick', 'tilesloaded'];
 
 var script = {
 	name: 'GoogleMapsMap',
@@ -1933,7 +1933,7 @@ var script = {
 
 		this.lastCenter = this.$_map.getCenter();
 
-		this.redirectEvents(this.$_map, redirectedEvents$2);
+		this.redirectEvents(this.$_map, redirectedEvents$1);
 
 		// Code that awaits `$_getMap()`
 		this.$_mapPromises.forEach(function (resolve) {
@@ -2167,7 +2167,7 @@ var Map = normalizeComponent_1({ render: __vue_render__, staticRenderFns: __vue_
 
 var boundProps$2 = ['animation', 'clickable', 'cursor', 'draggable', 'icon', 'label', 'opacity', 'place', 'position', 'shape', 'title', 'visible', 'zIndex'];
 
-var redirectedEvents$3 = ['click', 'rightclick', 'dblclick', 'drag', 'dragstart', 'dragend', 'mouseup', 'mousedown', 'mouseover', 'mouseout'];
+var redirectedEvents$2 = ['click', 'rightclick', 'dblclick', 'drag', 'dragstart', 'dragend', 'mouseup', 'mousedown', 'mouseover', 'mouseout'];
 
 var Marker = {
 	name: 'GoogleMapsMarker',
@@ -2231,7 +2231,7 @@ var Marker = {
 
 		this.$_marker = new window.google.maps.Marker(options);
 		this.bindProps(this.$_marker, boundProps$2);
-		this.redirectEvents(this.$_marker, redirectedEvents$3);
+		this.redirectEvents(this.$_marker, redirectedEvents$2);
 	},
 	beforeDestroy: function beforeDestroy() {
 		if (this.$_marker) {
@@ -2441,7 +2441,7 @@ var UserPosition = {
 
 var boundProps$3 = ['draggable', 'editable', 'options', 'path'];
 
-var redirectedEvents$4 = ['click', 'rightclick', 'dblclick', 'drag', 'dragstart', 'dragend', 'mouseup', 'mousedown', 'mouseover', 'mouseout'];
+var redirectedEvents$3 = ['click', 'rightclick', 'dblclick', 'drag', 'dragstart', 'dragend', 'mouseup', 'mousedown', 'mouseover', 'mouseout'];
 
 var Polyline = {
 	name: 'GoogleMapsPolyline',
@@ -2489,7 +2489,7 @@ var Polyline = {
 
 		this.$_polyline = new window.google.maps.Polyline(options);
 		this.bindProps(this.$_polyline, boundProps$3);
-		this.redirectEvents(this.$_polyline, redirectedEvents$4);
+		this.redirectEvents(this.$_polyline, redirectedEvents$3);
 		this.listen(this.$_polyline, 'drag', function () {
 			_this.$emit('path_changed', _this.$_polyline.getPath());
 		});
@@ -2503,7 +2503,7 @@ var Polyline = {
 
 var boundProps$4 = ['bounds', 'draggable', 'editable', 'visible', 'options'];
 
-var redirectedEvents$5 = ['click', 'rightclick', 'dblclick', 'drag', 'dragstart', 'dragend', 'mouseup', 'mousedown', 'mouseover', 'mouseout'];
+var redirectedEvents$4 = ['click', 'rightclick', 'dblclick', 'drag', 'dragstart', 'dragend', 'mouseup', 'mousedown', 'mouseover', 'mouseout'];
 
 var Rectangle = {
 	name: 'GoogleMapsRectangle',
@@ -2566,7 +2566,7 @@ var Rectangle = {
 
 		this.$_rectangle = new window.google.maps.Rectangle(options);
 		this.bindProps(this.$_rectangle, boundProps$4);
-		this.redirectEvents(this.$_rectangle, redirectedEvents$5);
+		this.redirectEvents(this.$_rectangle, redirectedEvents$4);
 	},
 	beforeDestroy: function beforeDestroy() {
 		if (this.$_rectangle) {
@@ -2577,7 +2577,7 @@ var Rectangle = {
 
 var boundProps$5 = ['draggable', 'editable', 'options', 'paths'];
 
-var redirectedEvents$6 = ['click', 'rightclick', 'dblclick', 'drag', 'dragstart', 'dragend', 'mouseup', 'mousedown', 'mouseover', 'mouseout'];
+var redirectedEvents$5 = ['click', 'rightclick', 'dblclick', 'drag', 'dragstart', 'dragend', 'mouseup', 'mousedown', 'mouseover', 'mouseout'];
 
 var Polygon = {
 	name: 'GoogleMapsPolygon',
@@ -2626,7 +2626,7 @@ var Polygon = {
 
 		this.$_polygon = new window.google.maps.Polygon(options);
 		this.bindProps(this.$_polygon, boundProps$5);
-		this.redirectEvents(this.$_polygon, redirectedEvents$6);
+		this.redirectEvents(this.$_polygon, redirectedEvents$5);
 		this.listen(this.$_polygon, 'drag', function () {
 			_this.$emit('path_changed', _this.$_polygon.getPath());
 		});
@@ -2638,57 +2638,149 @@ var Polygon = {
 	}
 };
 
-var boundProps$6 = ['origin', 'destination', 'travelMode'];
-
 var Direction = {
 	name: 'GoogleMapsDirections',
 
-	mixins: [Service, MapElement],
+	mixins: [Service],
 
 	props: {
 		origin: {
-			type: String,
-			required: true
+			type: String
 		},
 		destination: {
-			type: String,
-			required: true
+			type: String
 		},
 		travelMode: {
 			type: String,
 			default: 'DRIVING'
+		},
+		waypoints: {
+			type: Array
+		},
+		optimizeWaypoints: {
+			type: Boolean,
+			default: false
 		}
 	},
 
 	methods: {
 		createServices: function createServices() {
-			this.$_directionService = new window.google.maps.DirectionsService(this.$props);
+			this.$_directionService = new window.google.maps.DirectionsService();
 		},
 		update: function update() {
 			var _this = this;
 
 			this.loading = true;
+
+			if (!this.request || !this.$_directionService) return;
+
 			this.$_directionService.route(this.request, function (results, status) {
 				_this.setResults(results, status);
+				_this.$emit('directionResult', results);
 				_this.loading = false;
 			});
-		},
-		render: function render(h) {
-			return "";
-		},
-		googleMapsReady: function googleMapsReady() {
-			var options = Object.assign({}, this.$props);
-			options.map = this.$_map;
+		}
+	}
+};
 
-			this.$_directionRender = new window.google.maps.DirectionsRender(options);
-			this.$_direction = this.$_directionRender.setDirections(this.result);
-			this.bindProps(this.$_direction, boundProps$6);
-			this.redirectEvents(this.$_direction, redirectedEvents);
+var DrawDirection = {
+	name: 'GoogleMapsPolygon',
+
+	mixins: [MapElement],
+
+	props: {
+		draggable: {
+			type: Boolean,
+			default: false
 		},
-		beforeDestroy: function beforeDestroy() {
-			if (this.$_direction) {
-				this.$_direction.setMap(null);
+		options: {
+			type: Object,
+			default: function _default() {
+				return {};
 			}
+		},
+		suppressMarkers: {
+			type: Boolean,
+			default: false
+		},
+		directionResult: {
+			type: Object,
+			required: true
+		},
+		drawDistanceWindow: {
+			type: Boolean,
+			default: true
+		}
+	},
+
+	watch: {
+		paths: 'updateOptions',
+		options: 'updateOptions'
+	},
+
+	methods: {
+		updateOptions: function updateOptions(options) {
+			this.$_direction && this.$_direction.setOptions(options || this.$props);
+		},
+		calcTravelInfo: function calcTravelInfo() {
+			var time = 0;
+			var distance = 0;
+			this.directionResult.routes[0].legs.forEach(function (leg) {
+				distance += leg.distance.value;
+				time += leg.duration.value;
+			});
+
+			var km = distance / 1000;
+
+			return {
+				time: this.secondsToHms(time),
+				distance: km.toFixed(1)
+			};
+		},
+		setInfoWindow: function setInfoWindow() {
+			var step = 1;
+			var response = this.directionResult;
+			var travelInfo = this.calcTravelInfo();
+
+			this.$_infoWindow = new window.google.maps.InfoWindow();
+			this.$_infoWindow.setContent('<b>' + travelInfo.distance + '</b> km <br><b>' + travelInfo.time + '</b>');
+			this.$_infoWindow.setPosition(response.routes[0].legs[0].steps[step].end_location);
+			this.$_infoWindow.open(this.$_map);
+		},
+		secondsToHms: function secondsToHms(d) {
+			d = Number(d);
+			var h = Math.floor(d / 3600);
+			var m = Math.floor(d % 3600 / 60);
+			var hDisplay = h > 0 ? h + (h == 1 ? ' time, ' : ' timer, ') : '';
+			var mDisplay = m > 0 ? m + (m == 1 ? ' minut' : ' minutter') : '';
+			// var sDisplay = s > 0 ? s + (s == 1 ? ' sekund' : ' sekunder') : ''
+
+			// put sDisplay on to display seconds - and a comma to minutes word
+			return hDisplay + mDisplay;
+		}
+	},
+
+	render: function render(h) {
+		return '';
+	},
+	googleMapsReady: function googleMapsReady() {
+		var options = Object.assign({}, this.$props);
+		options.map = this.$_map;
+
+		// draw directions
+		this.$_direction = new window.google.maps.DirectionsRenderer(options).setDirections(this.directionResult);
+
+		// draw distance
+		if (this.drawDistanceWindow) {
+			this.setInfoWindow();
+		}
+	},
+	beforeDestroy: function beforeDestroy() {
+		if (this.$_direction) {
+			this.$_direction.setMap(null);
+		}
+		if (this.$_infoWindow) {
+			this.$_infoWindow.setMap(null);
 		}
 	}
 };
@@ -2705,6 +2797,7 @@ function registerComponents(Vue, prefix) {
 	Vue.component(prefix + 'polyline', Polyline);
 	Vue.component(prefix + 'polygon', Polygon);
 	Vue.component(prefix + 'direction', Direction);
+	Vue.component(prefix + 'direction-draw', DrawDirection);
 }
 
 var plugin = {
@@ -2752,6 +2845,7 @@ exports.MapElement = MapElement;
 exports.Polyline = Polyline;
 exports.Polygon = Polygon;
 exports.Direction = Direction;
+exports.DrawDirection = DrawDirection;
 exports['default'] = plugin;
 
 Object.defineProperty(exports, '__esModule', { value: true });

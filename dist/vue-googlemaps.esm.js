@@ -2068,7 +2068,6 @@ function normalizeComponent(template, style, script, scopeId, isFunctionalTempla
 }
 
 var normalizeComponent_1 = normalizeComponent;
-//# sourceMappingURL=normalize-component.js.map
 
 'use strict';
 
@@ -2121,7 +2120,6 @@ function addStyle(id, css) {
 }
 
 var browser = createInjector;
-//# sourceMappingURL=browser.js.map
 
 /* script */
 var __vue_script__ = script;
@@ -2156,6 +2154,9 @@ var __vue_module_identifier__ = undefined;
 /* functional template */
 var __vue_is_functional_template__ = false;
 /* component normalizer */
+/* style inject */
+/* style inject SSR */
+
 var Map = normalizeComponent_1({ render: __vue_render__, staticRenderFns: __vue_staticRenderFns__ }, __vue_inject_styles__, __vue_script__, __vue_scope_id__, __vue_is_functional_template__, __vue_module_identifier__, browser, undefined);
 
 var boundProps$2 = ['animation', 'clickable', 'cursor', 'draggable', 'icon', 'label', 'opacity', 'place', 'position', 'shape', 'title', 'visible', 'zIndex'];
@@ -2669,6 +2670,7 @@ var Direction = {
 
 			this.$_directionService.route(this.request, function (results, status) {
 				_this.setResults(results, status);
+				_this.$emit('directionResult', results);
 				_this.loading = false;
 			});
 		}
@@ -2814,6 +2816,7 @@ var plugin = {
 	}
 };
 
+// Auto-install
 var GlobalVue = null;
 if (typeof window !== 'undefined') {
 	GlobalVue = window.Vue;
