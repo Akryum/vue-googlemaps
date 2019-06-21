@@ -2704,10 +2704,6 @@ var DrawDirection = {
 		drawDistanceWindow: {
 			type: Boolean,
 			default: true
-		},
-		iconColor: {
-			type: String,
-			default: 80
 		}
 	},
 
