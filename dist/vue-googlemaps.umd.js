@@ -2710,6 +2710,10 @@ var DrawDirection = {
 		drawDistanceWindow: {
 			type: Boolean,
 			default: true
+		},
+		iconColor: {
+			type: String,
+			default: 80
 		}
 	},
 
@@ -2828,6 +2832,86 @@ var DrawDirection = {
 	}
 };
 
+var StreetViewRender = {
+	name: 'GoogleMapsStreetViewRender',
+
+	mixins: [MapElement],
+
+	props: {
+		draggable: {
+			type: Boolean,
+			default: false
+		},
+		options: {
+			type: Object,
+			default: function _default() {
+				return {};
+			}
+		},
+		address: {
+			type: String,
+			required: false
+		}
+	},
+
+	watch: {
+		paths: 'updateOptions',
+		options: 'updateOptions',
+		address: {
+			handler: function handler(value) {
+				value && this.openStreetView();
+			},
+
+			deep: true
+		}
+	},
+
+	methods: {
+		updateOptions: function updateOptions(options) {
+			this.$_direction && this.$_direction.setOptions(options || this.$props);
+		},
+		openStreetView: function openStreetView() {
+			var _this = this;
+
+			if (!this.address || this.address == '') {
+				return;
+			}
+
+			this.$_geocoder.geocode({ address: this.address }, function (results, status) {
+				if (status == 'OK') {
+					_this.$_geo_address = results[0].geometry.location;
+
+					_this.$_panorama.setPosition(_this.$_geo_address);
+
+					_this.$_panorama.setPov( /** @type {google.maps.StreetViewPov} */{
+						heading: 265,
+						pitch: 0
+					});
+					_this.$_panorama.setVisible(true);
+				}
+			});
+		}
+	},
+
+	render: function render(h) {
+		return '';
+	},
+	googleMapsReady: function googleMapsReady() {
+		var options = Object.assign({}, this.$props);
+		options.map = this.$_map;
+
+		this.$_geocoder = new window.google.maps.Geocoder();
+		this.$_panorama = this.$_map.getStreetView();
+
+		this.openStreetView();
+	},
+	beforeDestroy: function beforeDestroy() {
+		// if (this.$_panorama) {
+		// 	this.$_panorama.setMap(null)
+		// }
+	}
+};
+
 function registerComponents(Vue, prefix) {
 	Vue.component(prefix + 'circle', Circle);
 	Vue.component(prefix + 'rectangle', Rectangle);
@@ -2841,6 +2925,7 @@ function registerComponents(Vue, prefix) {
 	Vue.component(prefix + 'polygon', Polygon);
 	Vue.component(prefix + 'direction', Direction);
 	Vue.component(prefix + 'direction-draw', DrawDirection);
+	Vue.component(prefix + 'streetview-render', StreetViewRender);
 }
 
 var plugin = {
@@ -2889,6 +2974,7 @@ exports.Polyline = Polyline;
 exports.Polygon = Polygon;
 exports.Direction = Direction;
 exports.DrawDirection = DrawDirection;
+exports.StreetViewRender = StreetViewRender;
 exports['default'] = plugin;
 
 Object.defineProperty(exports, '__esModule', { value: true });

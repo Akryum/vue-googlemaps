@@ -29,18 +29,9 @@
                 @click="mapClick()"
         >
 
-            <googlemaps-streetview
-                    class="results-pane"
-                    ref="results"
-                    :request="streetViewRequest"
-                    v-on:streetViewResult="newStreetViewResult"
-            >
-
-                <template slot-scope="props" v-if="props.results">
-                    <googlemaps-streetview-render :streetViewResult="props.results" iconColor="#00a65e"></googlemaps-streetview-render>
+                <template>
+                    <googlemaps-streetview-render :address="address"></googlemaps-streetview-render>
                 </template>
-
-            </googlemaps-streetview>
 
         </googlemaps-map>
     </div>
@@ -60,6 +51,7 @@
     			userPosition: null,
     			zoom: 12,
     			streetViewRequest: null,
+    			address: 'Dronning Louises Bro, 1371 København',
     		}
     	},
 

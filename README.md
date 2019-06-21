@@ -3,6 +3,7 @@
 All credit to original creators.
 
 Forked project and added Direction component for showing a route with several waypoints.
+Added Street view component that go to steet view POV when given an address.
 
 directionRequest example:
 

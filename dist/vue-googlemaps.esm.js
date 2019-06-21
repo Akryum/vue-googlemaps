@@ -2068,7 +2068,6 @@ function normalizeComponent(template, style, script, scopeId, isFunctionalTempla
 }
 
 var normalizeComponent_1 = normalizeComponent;
-//# sourceMappingURL=normalize-component.js.map
 
 'use strict';
 
@@ -2121,7 +2120,6 @@ function addStyle(id, css) {
 }
 
 var browser = createInjector;
-//# sourceMappingURL=browser.js.map
 
 /* script */
 var __vue_script__ = script;
@@ -2156,6 +2154,9 @@ var __vue_module_identifier__ = undefined;
 /* functional template */
 var __vue_is_functional_template__ = false;
 /* component normalizer */
+/* style inject */
+/* style inject SSR */
+
 var Map = normalizeComponent_1({ render: __vue_render__, staticRenderFns: __vue_staticRenderFns__ }, __vue_inject_styles__, __vue_script__, __vue_scope_id__, __vue_is_functional_template__, __vue_module_identifier__, browser, undefined);
 
 var boundProps$2 = ['animation', 'clickable', 'cursor', 'draggable', 'icon', 'label', 'opacity', 'place', 'position', 'shape', 'title', 'visible', 'zIndex'];
@@ -2825,40 +2826,8 @@ var DrawDirection = {
 	}
 };
 
-var StreetView = {
-	name: 'GoogleMapsDirections',
-
-	mixins: [Service],
-
-	props: {
-		location: {
-			type: Object
-		}
-	},
-
-	methods: {
-		createServices: function createServices() {
-			this.$_streetViewService = new window.google.maps.StreetViewService();
-		},
-		update: function update() {
-			var _this = this;
-
-			this.loading = true;
-
-			if (!this.request || !this.$_streetViewService) return;
-
-			this.$_streetViewService.getPanorama(this.request, function (results, status) {
-				console.log(results);
-				_this.setResults(results, status);
-				_this.$emit('streetViewResult', results);
-				_this.loading = false;
-			});
-		}
-	}
-};
-
 var StreetViewRender = {
-	name: 'GoogleMapsPolygon',
+	name: 'GoogleMapsStreetViewRender',
 
 	mixins: [MapElement],
 
@@ -2873,18 +2842,18 @@ var StreetViewRender = {
 				return {};
 			}
 		},
-		streetViewResult: {
-			type: Object,
-			required: true
+		address: {
+			type: String,
+			required: false
 		}
 	},
 
 	watch: {
 		paths: 'updateOptions',
 		options: 'updateOptions',
-		streetViewResult: {
+		address: {
 			handler: function handler(value) {
-				value && this.rerender();
+				value && this.openStreetView();
 			},
 
 			deep: true
@@ -2894,6 +2863,27 @@ var StreetViewRender = {
 	methods: {
 		updateOptions: function updateOptions(options) {
 			this.$_direction && this.$_direction.setOptions(options || this.$props);
+		},
+		openStreetView: function openStreetView() {
+			var _this = this;
+
+			if (!this.address || this.address == '') {
+				return;
+			}
+
+			this.$_geocoder.geocode({ address: this.address }, function (results, status) {
+				if (status == 'OK') {
+					_this.$_geo_address = results[0].geometry.location;
+
+					_this.$_panorama.setPosition(_this.$_geo_address);
+
+					_this.$_panorama.setPov( /** @type {google.maps.StreetViewPov} */{
+						heading: 265,
+						pitch: 0
+					});
+					_this.$_panorama.setVisible(true);
+				}
+			});
 		}
 	},
 
@@ -2904,20 +2894,15 @@ var StreetViewRender = {
 		var options = Object.assign({}, this.$props);
 		options.map = this.$_map;
 
-		// draw directions
-		this.$_direction_render = new window.google.maps.StreetViewPanorama(options);
-		this.$_direction = this.$_direction_render.setDirections(this.streetViewResult);
+		this.$_geocoder = new window.google.maps.Geocoder();
+		this.$_panorama = this.$_map.getStreetView();
+
+		this.openStreetView();
 	},
 	beforeDestroy: function beforeDestroy() {
-		if (this.$_direction) {
-			this.$_direction.setMap(null);
-		}
-		if (this.$_direction_render) {
-			this.$_direction_render.setMap(null);
-		}
-		if (this.$_infoWindow) {
-			this.$_infoWindow.setMap(null);
-		}
+		// if (this.$_panorama) {
+		// 	this.$_panorama.setMap(null)
+		// }
 	}
 };
 
@@ -2934,7 +2919,6 @@ function registerComponents(Vue, prefix) {
 	Vue.component(prefix + 'polygon', Polygon);
 	Vue.component(prefix + 'direction', Direction);
 	Vue.component(prefix + 'direction-draw', DrawDirection);
-	Vue.component(prefix + 'streetview', StreetView);
 	Vue.component(prefix + 'streetview-render', StreetViewRender);
 }
 
@@ -2960,6 +2944,7 @@ var plugin = {
 	}
 };
 
+// Auto-install
 var GlobalVue = null;
 if (typeof window !== 'undefined') {
 	GlobalVue = window.Vue;
@@ -2970,5 +2955,5 @@ if (GlobalVue) {
 	GlobalVue.use(plugin);
 }
 
-export { Circle, Rectangle, Geocoder, Map, Marker, NearbyPlaces, PlaceDetails, UserPosition, MapElement, Polyline, Polygon, Direction, DrawDirection, StreetView, StreetViewRender };
+export { Circle, Rectangle, Geocoder, Map, Marker, NearbyPlaces, PlaceDetails, UserPosition, MapElement, Polyline, Polygon, Direction, DrawDirection, StreetViewRender };
 export default plugin;

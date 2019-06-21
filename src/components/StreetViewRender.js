@@ -21,7 +21,7 @@ const redirectedEvents = [
 ]
 
 export default {
-	name: 'GoogleMapsPolygon',
+	name: 'GoogleMapsStreetViewRender',
 
 	mixins: [
 		MapElement,
@@ -36,18 +36,18 @@ export default {
 			type: Object,
 			default: () => ({}),
 		},
-		streetViewResult: {
-			type: Object,
-			required: true,
+		address: {
+			type: String,
+			required: false,
 		},
 	},
 
 	watch: {
 		paths: 'updateOptions',
 		options: 'updateOptions',
-		streetViewResult: {
+		address: {
 			handler (value) {
-				value && this.rerender()
+				value && this.openStreetView()
 			},
 			deep: true,
 		},
@@ -56,6 +56,25 @@ export default {
 	methods: {
 		updateOptions (options) {
 			this.$_direction && this.$_direction.setOptions(options || this.$props)
+		},
+		openStreetView () {
+			if (!this.address || this.address == '') {
+				return
+			}
+
+			this.$_geocoder.geocode({address: this.address}, (results, status) => {
+				if (status == 'OK') {
+					this.$_geo_address = results[0].geometry.location
+
+					this.$_panorama.setPosition(this.$_geo_address)
+
+					this.$_panorama.setPov(/** @type {google.maps.StreetViewPov} */({
+						heading: 265,
+						pitch: 0,
+					}))
+					this.$_panorama.setVisible(true)
+				}
+			})
 		},
 	},
 
@@ -67,20 +86,15 @@ export default {
 		const options = Object.assign({}, this.$props)
 		options.map = this.$_map
 
-		// draw directions
-		this.$_direction_render = new window.google.maps.StreetViewPanorama(options)
-		this.$_direction = this.$_direction_render.setDirections(this.streetViewResult)
+		this.$_geocoder = new window.google.maps.Geocoder()
+		this.$_panorama = this.$_map.getStreetView()
+
+		this.openStreetView()
 	},
 
 	beforeDestroy () {
-		if (this.$_direction) {
-			this.$_direction.setMap(null)
-		}
-		if (this.$_direction_render) {
-			this.$_direction_render.setMap(null)
-		}
-		if (this.$_infoWindow) {
-			this.$_infoWindow.setMap(null)
-		}
+		// if (this.$_panorama) {
+		// 	this.$_panorama.setMap(null)
+		// }
 	},
 }
