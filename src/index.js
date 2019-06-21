@@ -15,6 +15,8 @@ import Rectangle from './components/Rectangle'
 import Polygon from './components/Polygon'
 import Direction from './components/Directions'
 import DrawDirection from './components/DrawDirection'
+import StreetView from './components/StreetView'
+import StreetViewRender from './components/StreetViewRender'
 
 import MapElement from './mixins/MapElement'
 
@@ -32,6 +34,8 @@ export {
 	Polygon,
 	Direction,
 	DrawDirection,
+	StreetView,
+	StreetViewRender,
 }
 
 function registerComponents (Vue, prefix) {
@@ -47,6 +51,8 @@ function registerComponents (Vue, prefix) {
 	Vue.component(`${prefix}polygon`, Polygon)
 	Vue.component(`${prefix}direction`, Direction)
 	Vue.component(`${prefix}direction-draw`, DrawDirection)
+	Vue.component(`${prefix}streetview`, StreetView)
+	Vue.component(`${prefix}streetview-render`, StreetViewRender)
 }
 
 const plugin = {

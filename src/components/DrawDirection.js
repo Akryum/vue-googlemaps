@@ -48,6 +48,10 @@ export default {
 			type: Boolean,
 			default: true,
 		},
+		iconColor: {
+			type: String,
+			default: 80,
+		},
 	},
 
 	watch: {

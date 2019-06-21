@@ -30,6 +30,9 @@
 				<md-list-item>
 					<router-link :to="{ name: 'directions' }">Directions map</router-link>
 				</md-list-item>
+				<md-list-item>
+					<router-link :to="{ name: 'streetview' }">StreetView</router-link>
+				</md-list-item>
 			</md-list>
 		</md-sidenav>
 	</div>
