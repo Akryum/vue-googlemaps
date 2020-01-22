@@ -10,7 +10,6 @@ const config = require('../package.json')
 
 export default {
 	input: 'src/index.js',
-	name: 'vue-googlemaps',
 	plugins: [
 		resolve({
 			mainFields: ['jsnext', 'main', 'browser'],
