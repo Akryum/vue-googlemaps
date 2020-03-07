@@ -13,6 +13,7 @@ import UserPosition from './components/UserPosition'
 import Polyline from './components/Polyline'
 import Rectangle from './components/Rectangle'
 import Polygon from './components/Polygon'
+import Directions from "./components/Directions";
 
 import MapElement from './mixins/MapElement'
 
@@ -28,6 +29,7 @@ export {
 	MapElement,
 	Polyline,
 	Polygon,
+	Directions,
 }
 
 function registerComponents (Vue, prefix) {
@@ -41,6 +43,7 @@ function registerComponents (Vue, prefix) {
 	Vue.component(`${prefix}user-position`, UserPosition)
 	Vue.component(`${prefix}polyline`, Polyline)
 	Vue.component(`${prefix}polygon`, Polygon)
+	Vue.component(`${prefix}directions`, Directions)
 }
 
 const plugin = {

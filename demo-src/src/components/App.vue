@@ -27,6 +27,9 @@
 				<md-list-item>
 					<router-link :to="{ name: 'place-details' }">Place details</router-link>
 				</md-list-item>
+				<md-list-item>
+					<router-link :to="{ name: 'directions' }">Directions</router-link>
+				</md-list-item>
 			</md-list>
 		</md-sidenav>
 	</div>
