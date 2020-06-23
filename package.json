@@ -36,7 +36,7 @@
     "eslint-plugin-standard": "^3.0.1",
     "npm-watch": "^0.2.0",
     "regenerator-runtime": "^0.11.0",
-    "rollup": "^0.50.0",
+    "rollup": "^2.18.0",
     "rollup-plugin-babel": "^3.0.2",
     "rollup-plugin-commonjs": "^8.2.0",
     "rollup-plugin-node-resolve": "^3.0.0",
